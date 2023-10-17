@@ -1,0 +1,83 @@
+openapi: 3.1.3
+info:
+  title: Smart Article Analyzer
+  description: Text Analysis Application
+  version: 0.0.1
+servers:
+  - url: http://localhost:8080/api
+paths:
+  /convert:
+    post:
+      summary: Request to convert article to text
+      operationId: convert-article
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConvertText'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TextContent'
+  /analyze:
+    post:
+      summary: Request to analyze text
+      operationId: analyze
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TextContent"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Analysis"
+components:
+  schemas:
+    ConvertText:
+      type: object
+      properties:
+        payload:
+          type: string
+          example: "https://example.com/"
+        format:
+          type: string
+          example: "pdf"
+      required:
+        - payload
+        - format
+    TextContent:
+      type: object
+      properties:
+        text:
+          type: string
+          example: "Text here"
+      required:
+        - text
+    Analysis:
+      type: object
+      properties:
+        text:
+          type: string
+          example: "Summary here"
+        keywords:
+          type: array
+          items:
+            type: string
+            example: "keyword"
+        polarity:
+          type: integer 
+          format: int32
+          example: 2.5
+      required:
+        - text
+        - keywords
+        - polarity
