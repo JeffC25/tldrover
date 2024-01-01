@@ -6,23 +6,6 @@ info:
 servers:
   - url: http://localhost:8080/api
 paths:
-  /convert:
-    post:
-      summary: Request to convert article to text
-      operationId: convert-article
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ConvertText'
-        required: true
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TextContent'
   /analyze:
     post:
       summary: Request to analyze text
@@ -31,7 +14,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/TextContent"
+              $ref: "#/components/schemas/Content"
         required: true
       responses:
         "200":
@@ -42,19 +25,7 @@ paths:
                 $ref: "#/components/schemas/Analysis"
 components:
   schemas:
-    ConvertText:
-      type: object
-      properties:
-        payload:
-          type: string
-          example: "https://example.com/"
-        format:
-          type: string
-          example: "pdf"
-      required:
-        - payload
-        - format
-    TextContent:
+    Content:
       type: object
       properties:
         text:
@@ -74,8 +45,7 @@ components:
             type: string
             example: "keyword"
         polarity:
-          type: integer 
-          format: int32
+          type: boolean
           example: 2.5
       required:
         - text
