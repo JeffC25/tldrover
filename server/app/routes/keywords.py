@@ -1,11 +1,15 @@
 from fastapi import APIRouter, HTTPException
-from app.utils.nlp import extract_keywords
 from pydantic import BaseModel
+from transformers import pipeline
 
 router = APIRouter()
 
 class KeywordsRequest(BaseModel):
     text: str
+
+def extract_keywords(text):
+    # Placeholder 
+    return ["test1", "test2", "test3"]
 
 @router.post("/keywords/")
 async def extract_keywords_route(request: KeywordsRequest):
