@@ -1,11 +1,16 @@
 from fastapi import APIRouter, HTTPException
-from app.utils.nlp import analyze_sentiment
 from pydantic import BaseModel
+from transformers import pipeline
 
 router = APIRouter()
 
 class SentimentRequest(BaseModel):
     text: str
+
+def analyze_sentiment(text):
+    sentiment_analyzer = pipeline("sentiment-analysis", model="../../ml_models/")
+    result = sentiment_analyzer(text)
+    return result[0]
 
 @router.post("/sentiment/")
 async def analyze_sentiment_route(request: SentimentRequest):
