@@ -8,7 +8,7 @@ class SentimentRequest(BaseModel):
     text: str
 
 def analyze_sentiment(text):
-    sentiment_analyzer = pipeline("sentiment-analysis", model="../../ml_models/")
+    sentiment_analyzer = pipeline("sentiment-analysis")
     result = sentiment_analyzer(text)
     return result[0]
 
