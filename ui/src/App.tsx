@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Topbar from "./components/Topbar";
 import CheckboxList from "./components/CheckboxList";
 import ExitArrowIcon from './assets/exitarrow.svg'
 
