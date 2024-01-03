@@ -52,12 +52,16 @@ function App() {
         <CheckboxList items={items} setItems={setItems} />
 
         {/* Analyze Button */}
-        <button className="bg-lime-500 text-white rounded-md p-1">Analyze</button>
+        <button className="bg-lime-500 text-white rounded-md p-1 hover:animate-pulse">Analyze</button>
+
+        {/* <div className="flex-grow"></div>
+
+        <span className="text-neutral-500">Jeff Chen © 2024</span> */}
 
       </div>
 
-      <textarea placeholder="Enter text..." className="p-2 border border-neutral-600 rounded-md w-1/3 resize-none"></textarea>
-      <textarea readOnly placeholder="Output will be here..." className="p-2 border border-neutral-600 rounded-md w-1/3 resize-none"></textarea>
+      <textarea placeholder="Enter text..." className="shadow-inner p-2 border border-neutral-600 rounded-md w-1/3 resize-none"></textarea>
+      <textarea readOnly placeholder="Output will be here..." className="shadow-inner p-2 border border-neutral-600 rounded-md w-1/3 resize-none"></textarea>
     </div>
   )
 }
