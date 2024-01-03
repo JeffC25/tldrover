@@ -21,7 +21,7 @@ const CheckboxList = ({ items, setItems }: Props) => {
     };
 
     return (
-        <div className="flex flex-col space-y-2">
+        <div className="flex flex-col space-y-2 w-min">
             {items.map(item => (
                 <label key={item.id} className="flex items-center space-x-1">
                     <div 
