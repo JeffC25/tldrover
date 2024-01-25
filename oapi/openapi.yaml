@@ -6,6 +6,30 @@ info:
 servers:
   - url: http://localhost:8080/api
 paths:
+  /article/{url}:
+    get:
+      summary: Request to get article content
+      operationId: article
+      parameters:
+        - name: url
+          in: path
+          description: URL of the article
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Content"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
   /analyze:
     post:
       summary: Request to analyze text
@@ -23,8 +47,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Analysis"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 components:
   schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Error message"
+      required:
+        - message
     Content:
       type: object
       properties:
