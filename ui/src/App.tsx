@@ -13,15 +13,58 @@ function App() {
   const [loading, setLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
 
-  const [summary, setSummary] = useState<string>('');
-  const [keywords, setKeywords] = useState<string[]>([]);
-  const [sentiment, setSentiment] = useState<number>(0);
-
   const [items, setItems] = useState<CheckboxItem[]>([
     { id: 1, value: 'Summary', isChecked: true },
     { id: 2, value: 'Keywords', isChecked: true },
     { id: 3, value: 'Sentiment', isChecked: true },
   ]);
+
+  const [summary, setSummary] = useState<string>('');
+  const [keywords, setKeywords] = useState<string[]>([]);
+  const [sentiment, setSentiment] = useState<number>(0);
+
+  const getArticle = async () => {
+    setLoading(true);
+    setIsError(false);
+
+    try {
+      const response = await fetch(`http://localhost:8080/article/${input}`);
+      const data = await response.json();
+
+      setSummary(data.summary);
+      setKeywords(data.keywords);
+      setSentiment(data.sentiment);
+    } catch (error) {
+      setIsError(true);
+    }
+
+    setLoading(false);
+  }
+
+  const getAnalysis = async () => {
+    setLoading(true);
+    setIsError(false);
+
+    try {
+      const response = await fetch(`http://localhost:8080/analyze/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text: input }),
+      });
+      
+      const data = await response.json();
+
+      setSummary(data.summary);
+      setKeywords(data.keywords);
+      setSentiment(data.sentiment);
+    } catch (error) {
+      setIsError(true);
+    }
+
+    setLoading(false);
+  }
 
   return (
 
@@ -52,7 +95,7 @@ function App() {
         <CheckboxList items={items} setItems={setItems} />
 
         {/* Analyze Button */}
-        <button className="bg-lime-500 text-white rounded-md p-1 hover:animate-pulse">Analyze</button>
+        <button type="submit" className="bg-lime-500 text-white rounded-md p-1 hover:animate-pulse">Analyze</button>
 
         {/* <div className="flex-grow"></div>
 
