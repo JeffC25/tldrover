@@ -96,7 +96,7 @@ function App() {
         <CheckboxList items={items} setItems={setItems} />
 
         {/* Analyze Button */}
-        <button onClick={getAnalysis} type="submit" className={`${content != '' ? 'bg-lime-500 hover:animate-pulse' : 'disabled bg-neutral-200'} text-white rounded-md p-1`}>Analyze</button>
+        <button onClick={getAnalysis} type="submit" className={`${content.trimStart() != '' && items.some((item) => item.isChecked) ? 'bg-lime-500 hover:animate-pulse' : 'disabled bg-neutral-200'} text-white rounded-md p-1 transition duration-300`}>Analyze</button>
 
         {/* <div className="flex-grow"></div>
 
