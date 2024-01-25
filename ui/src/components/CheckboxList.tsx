@@ -28,7 +28,7 @@ const CheckboxList = ({ items, setItems }: Props) => {
                         onClick={() => handleCheck(item.id)}
                         className={`w-12 h-6 rounded-full p-1 flex ${item.isChecked ? 'bg-lime-500' : 'bg-gray-300'}`}
                     >
-                        <div className={`${item.isChecked ? 'w-full' : 'w-0'} duration-200`}></div>
+                        <div className={`${item.isChecked ? 'w-full' : 'w-0'} duration-300`}></div>
                         <div className={`bg-white h-full aspect-square rounded-full`}></div>
                     </div>
                     <span className=" text-neutral-800">{item.value}</span>
