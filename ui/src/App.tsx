@@ -9,7 +9,8 @@ interface CheckboxItem {
 }
 
 function App() {
-  const [input, setInput] = useState<string>('');
+  const [content, setContent] = useState<string>('');
+  const [url, setUrl] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
 
@@ -28,7 +29,7 @@ function App() {
     setIsError(false);
 
     try {
-      const response = await fetch(`http://localhost:8080/article/${input}`);
+      const response = await fetch(`http://localhost:8080/article/${content}`);
       const data = await response.json();
 
       setSummary(data.summary);
@@ -51,7 +52,7 @@ function App() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ text: input }),
+        body: JSON.stringify({ text: content }),
       });
 
       const data = await response.json();
@@ -95,7 +96,7 @@ function App() {
         <CheckboxList items={items} setItems={setItems} />
 
         {/* Analyze Button */}
-        <button onClick={getAnalysis} type="submit" className={`${input != '' ? 'bg-lime-500 hover:animate-pulse' : 'disabled bg-neutral-200'} text-white rounded-md p-1`}>Analyze</button>
+        <button onClick={getAnalysis} type="submit" className={`${content != '' ? 'bg-lime-500 hover:animate-pulse' : 'disabled bg-neutral-200'} text-white rounded-md p-1`}>Analyze</button>
 
         {/* <div className="flex-grow"></div>
 
@@ -104,7 +105,7 @@ function App() {
       </div>
   
       {/* Textareas */}
-      <textarea placeholder="Enter text..." value={input} onChange={(e) => setInput(e.target.value)} className="shadow-inner p-2 border border-neutral-600 rounded-md w-1/3 resize-none"></textarea>
+      <textarea placeholder="Enter text..." value={content} onChange={(e) => setContent(e.target.value)} className="shadow-inner p-2 border border-neutral-600 rounded-md w-1/3 resize-none"></textarea>
       
       <div className="shadow-inner p-2 border border-neutral-600 rounded-md w-1/3 resize-none">
         {isError && <p className="text-red-500">Error</p>}
