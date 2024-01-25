@@ -9,7 +9,7 @@ interface CheckboxItem {
 }
 
 function App() {
-  const [text, setText] = useState<string>('');
+  const [content, setContent] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
 
@@ -62,7 +62,30 @@ function App() {
   
       {/* Textareas */}
       <textarea placeholder="Enter text..." className="shadow-inner p-2 border border-neutral-600 rounded-md w-1/3 resize-none"></textarea>
-      <textarea readOnly placeholder="Output will be here..." className="shadow-inner p-2 border border-neutral-600 rounded-md w-1/3 resize-none"></textarea>
+      <textarea readOnly placeholder="Output will be here..." className="shadow-inner p-2 border border-neutral-600 rounded-md w-1/3 resize-none">
+        {summary !== '' && items[0].isChecked && (
+          <>
+            <h3 className="text-lg font-semibold">Summary</h3>
+            <p>{summary}</p>
+          </>
+        )}
+        {keywords.length !== 0 && items[1].isChecked && (
+          <>
+            <h3 className="text-lg font-semibold">Keywords</h3>
+            <ul>
+              {keywords.map((keyword, index) => (
+                <li key={index}>{keyword}</li>
+              ))}
+            </ul>
+          </>
+        )}
+        {sentiment !== 0 && items[2].isChecked && (
+          <>
+            <h3 className="text-lg font-semibold">Sentiment</h3>
+            <p>{sentiment}</p>
+          </>
+        )}
+      </textarea>
     </div>
   )
 }
