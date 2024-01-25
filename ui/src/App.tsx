@@ -28,6 +28,7 @@ function App() {
   const getArticle = async () => {
     setLoading(true);
     setIsError(false);
+    setPlaceholder('Loading...');
 
     try {
       const response = await fetch(`http://localhost:8080/article/${content}`);
@@ -37,7 +38,8 @@ function App() {
       setKeywords(data.keywords);
       setSentiment(data.sentiment);
     } catch (error) {
-      setIsError(true);
+      // setIsError(true);
+      setPlaceholder('There was an error getting the article.')
     }
 
     setLoading(false);
@@ -106,7 +108,7 @@ function App() {
       </div>
   
       {/* Textareas */}
-      <textarea placeholder={placeholder} value={content} onChange={(e) => setContent(e.target.value)} className="shadow-inner p-2 border border-neutral-600 rounded-md w-1/3 resize-none"></textarea>
+      <textarea placeholder={placeholder} value={content} onChange={(e) => {setContent(e.target.value); setPlaceholder('Enter text...')}} className="shadow-inner p-2 border border-neutral-600 rounded-md w-1/3 resize-none"></textarea>
       
       <div className="shadow-inner p-2 border border-neutral-600 rounded-md w-1/3 resize-none">
         {isError && <p className="text-red-500">Error</p>}
