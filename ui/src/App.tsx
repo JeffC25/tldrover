@@ -95,7 +95,7 @@ function App() {
         <CheckboxList items={items} setItems={setItems} />
 
         {/* Analyze Button */}
-        <button type="submit" className={`${input != '' ? 'bg-lime-500 hover:animate-pulse' : 'disabled bg-neutral-200'} text-white rounded-md p-1`}>Analyze</button>
+        <button onClick={getAnalysis} type="submit" className={`${input != '' ? 'bg-lime-500 hover:animate-pulse' : 'disabled bg-neutral-200'} text-white rounded-md p-1`}>Analyze</button>
 
         {/* <div className="flex-grow"></div>
 
@@ -104,8 +104,9 @@ function App() {
       </div>
   
       {/* Textareas */}
-      <textarea placeholder="Enter text..." className="shadow-inner p-2 border border-neutral-600 rounded-md w-1/3 resize-none"></textarea>
-      <p className="shadow-inner p-2 border border-neutral-600 rounded-md w-1/3 resize-none">
+      <textarea placeholder="Enter text..." value={input} onChange={(e) => setInput(e.target.value)} className="shadow-inner p-2 border border-neutral-600 rounded-md w-1/3 resize-none"></textarea>
+      
+      <div className="shadow-inner p-2 border border-neutral-600 rounded-md w-1/3 resize-none">
         {isError && <p className="text-red-500">Error</p>}
         {loading && <p className="text-lime-500">Loading...</p>}
         {summary === '' && !loading && !isError && <p className="text-neutral-500">Output will be here...</p>}
@@ -131,7 +132,7 @@ function App() {
             <p>{sentiment}</p>
           </>
         )}
-      </p>
+      </div>
     </div>
   )
 }
