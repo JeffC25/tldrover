@@ -10,7 +10,7 @@ interface CheckboxItem {
 
 function App() {
   const [text, setText] = useState<string>('');
-  const [isFetching, setIsFetching] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
 
   const [summary, setSummary] = useState<string>('');
@@ -59,7 +59,8 @@ function App() {
         <span className="text-neutral-500">Jeff Chen © 2024</span> */}
 
       </div>
-
+  
+      {/* Textareas */}
       <textarea placeholder="Enter text..." className="shadow-inner p-2 border border-neutral-600 rounded-md w-1/3 resize-none"></textarea>
       <textarea readOnly placeholder="Output will be here..." className="shadow-inner p-2 border border-neutral-600 rounded-md w-1/3 resize-none"></textarea>
     </div>
