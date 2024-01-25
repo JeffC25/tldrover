@@ -1,6 +1,6 @@
 import { useState } from "react";
 import CheckboxList from "./components/CheckboxList";
-import ExitArrowIcon from './assets/exitarrow.svg'
+import ExitArrowIcon from "./assets/exitarrow.svg"
 
 interface CheckboxItem {
   id: number;
@@ -53,7 +53,7 @@ function App() {
         },
         body: JSON.stringify({ text: input }),
       });
-      
+
       const data = await response.json();
 
       setSummary(data.summary);
@@ -95,7 +95,7 @@ function App() {
         <CheckboxList items={items} setItems={setItems} />
 
         {/* Analyze Button */}
-        <button type="submit" className="bg-lime-500 text-white rounded-md p-1 hover:animate-pulse">Analyze</button>
+        <button type="submit" className={`${input != '' ? 'bg-lime-500 hover:animate-pulse' : 'disabled bg-neutral-200'} text-white rounded-md p-1`}>Analyze</button>
 
         {/* <div className="flex-grow"></div>
 
