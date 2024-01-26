@@ -1,4 +1,4 @@
-openapi: 3.1.3
+openapi: 3.0.3
 info:
   title: Smart Article Analyzer
   description: Text Analysis Application
@@ -6,6 +6,35 @@ info:
 servers:
   - url: http://localhost:8080/api
 paths:
+  /parsefile/:
+    post:
+      summary: Request to parse file
+      operationId: parseFile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+              required:
+                - file
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ExtractResponse"
+                
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
   /article/{url}:
     get:
       summary: Request to get article content
@@ -23,7 +52,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Content"
+                $ref: "#/components/schemas/ExtractResponse"
         "500":
           description: Internal Server Error
           content:
@@ -38,7 +67,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Content"
+              $ref: "#/components/schemas/AnalysisRequest"
         required: true
       responses:
         "200":
@@ -46,7 +75,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Analysis"
+                $ref: "#/components/schemas/ExtractResponse"
         "400":
           description: Bad Request
           content:
@@ -69,15 +98,32 @@ components:
           example: "Error message"
       required:
         - message
-    Content:
+    ExtractResponse:
+      type: object
+      properties:
+        content:
+          type: string
+          example: "Extracted content here"
+      required:
+        - content
+    AnalysisRequest:
       type: object
       properties:
         text:
           type: string
           example: "Text here"
+        summary:
+          type: boolean
+        keywords:
+          type: boolean
+        polarity:
+          type: boolean
       required:
         - text
-    Analysis:
+        - summary
+        - keywords
+        - polarity
+    AnalysisResponse:
       type: object
       properties:
         text:
@@ -89,7 +135,7 @@ components:
             type: string
             example: "keyword"
         polarity:
-          type: boolean
+          type: number
           example: 2.5
       required:
         - text
