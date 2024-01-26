@@ -1,6 +1,7 @@
 import { useState } from "react";
 import CheckboxList from "./components/CheckboxList";
 import ExitArrowIcon from "./assets/exitarrow.svg"
+import SpinnerIcon from "./assets/spinner.svg"
 
 interface CheckboxItem {
   id: number;
@@ -12,6 +13,7 @@ function App() {
   const [placeholder, setPlaceholder] = useState<string>('Enter text...');
   const [content, setContent] = useState<string>('');
   const [url, setUrl] = useState<string>('');
+  const [file, setFile] = useState<File>();
   const [loading, setLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
 
@@ -31,15 +33,40 @@ function App() {
     setPlaceholder('Loading...');
 
     try {
-      const response = await fetch(`http://localhost:8080/article/${content}`);
+      const response = await fetch(`http://localhost:8080/article/${url}`);
       const data = await response.json();
 
-      setSummary(data.summary);
-      setKeywords(data.keywords);
-      setSentiment(data.sentiment);
+      setContent(data.text);
+      setPlaceholder('Enter text...');
     } catch (error) {
       // setIsError(true);
       setPlaceholder('There was an error getting the article.')
+    }
+
+    setLoading(false);
+  }
+
+  const extractText = async () => {
+    setLoading(true);
+    setIsError(false);
+    setPlaceholder('Loading...');
+    try {
+      const response = await fetch(`http://localhost:8080/extract/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url: content }),
+      });
+
+      const data = await response.json();
+
+      setContent(data.text);
+      
+      setPlaceholder('Enter text...');
+    } catch (error) {
+      // setIsError(true);
+      setPlaceholder('There was an error extracting the text.')
     }
 
     setLoading(false);
@@ -73,7 +100,6 @@ function App() {
   return (
 
     <div className="flex h-screen w-screen space-x-6 justify-center p-8 sm:p-20">
-
       <div className="flex flex-col space-y-6 w-min">
 
         {/* Heading and GitHub Link */}
@@ -90,8 +116,10 @@ function App() {
         </div>
 
         {/* PDF and URL Input */}
-        <div className="flex flex-col space-y-2">
-          <button className="w-full border rounded-md border-lime-500 p-1 hover:bg-lime-500 hover:text-white">Upload PDF</button>
+        <div className="flex flex-col">
+          <label htmlFor="file" className="w-full border rounded-md border-lime-500 p-1 hover:bg-lime-500 hover:text-white">Upload PDF</label>
+          <input type="file" id="file" onChange={() => setFile(file)} className="invisible my-1 py-0 h-0 w-0"/>
+
           <input type="url" placeholder="Enter article URL..." className="border rounded-md border-lime-500 p-1"/>
         </div>
 
@@ -100,7 +128,7 @@ function App() {
 
         {/* Analyze Button */}
         <button onClick={getAnalysis} type="submit" className={`${content.trimStart() != '' && items.some((item) => item.isChecked) ? 'bg-lime-500 hover:animate-pulse' : 'disabled bg-neutral-200'} text-white rounded-md p-1 transition duration-300`}>Analyze</button>
-
+        
         {/* <div className="flex-grow"></div>
 
         <span className="text-neutral-500">Jeff Chen © 2024</span> */}
@@ -110,9 +138,9 @@ function App() {
       {/* Textareas */}
       <textarea placeholder={placeholder} value={content} onChange={(e) => {setContent(e.target.value); setPlaceholder('Enter text...')}} className="shadow-inner p-2 border border-neutral-600 rounded-md w-1/3 resize-none"></textarea>
       
-      <div className="shadow-inner p-2 border border-neutral-600 rounded-md w-1/3 resize-none">
-        {isError && <p className="text-red-500">Error</p>}
-        {loading && <p className="text-lime-500">Loading...</p>}
+      <div className={`relative shadow-inner p-2 border border-neutral-600 rounded-md w-1/3 resize-none`}>
+        {isError && <span className="text-red-500">Error</span>}
+        {loading && <div className="absolute flex justify-center items-center w-full h-full"><img className="aspect-square h-1/6 w-1/6 animate-spin" src={SpinnerIcon}/></div>}
         {summary === '' && !loading && !isError && <p className="text-neutral-500">Output will be here...</p>}
         {summary !== '' && items[0].isChecked && (
           <>
