@@ -1,5 +1,6 @@
 from fastapi import FastAPI
-from app.routes import summary, keywords, sentiment
+# from app.routes import summary, keywords, sentiment
+from app.routes import analyze
 import os
 from pathlib import Path
 
@@ -12,6 +13,7 @@ os.system("echo $TRANSFORMERS_CACHE")
 
 app = FastAPI()
 
-app.include_router(summary.router)
-app.include_router(keywords.router)
-app.include_router(sentiment.router)
+# app.include_router(summary.router)
+# app.include_router(keywords.router)
+# app.include_router(sentiment.router)
+app.include_router(analyze.router)
