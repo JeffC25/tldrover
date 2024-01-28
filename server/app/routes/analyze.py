@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from transformers import pipeline
+from transformers import pipeline, AutoTokenizer, AutoModelForTokenClassification
 from app.api.schemas import AnalysisRequest, AnalysisResponse, Sentiment
 from app.config import config
 
@@ -11,8 +11,20 @@ def summarize_text(text):
     return summary[0]['summary_text']
 
 def extract_keywords(text):
-    # Placeholder 
-    return ["test1", "test2", "test3"]
+    tokenizer = AutoTokenizer.from_pretrained(config['keyword_extraction_model'])
+    model = AutoModelForTokenClassification.from_pretrained(config['keyword_extraction_model'])
+    keyword_extractor = pipeline("ner", model=model, tokenizer=tokenizer, aggregation_strategy="simple")
+
+    # extract keywords and filter out low scores
+    extracted = keyword_extractor(text) 
+    filtered = [word for word in extracted if word['score'] >= 0.9]
+
+    # return only unique keywords
+    unique = set()
+    for word in filtered:
+        unique.add(word['word'])
+
+    return(list(unique))
 
 def analyze_sentiment(text):
     sentiment_analyzer = pipeline("sentiment-analysis", model=config['sentiment_analysis_model'])

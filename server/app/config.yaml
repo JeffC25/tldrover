@@ -3,3 +3,4 @@ hf_home: ./storage/transformers_cache
 nltk_data: ./storage/nltk_data
 summarization_model: "sshleifer/distilbart-cnn-12-6"
 sentiment_analysis_model: "cardiffnlp/twitter-roberta-base-sentiment-latest"
+keyword_extraction_model: "ml6team/keyphrase-extraction-distilbert-inspec"
