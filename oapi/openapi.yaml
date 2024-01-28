@@ -35,13 +35,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  /article/{url}:
+  /article:
     get:
       summary: Request to get article content
       operationId: article
       parameters:
         - name: url
-          in: path
+          in: query
           description: URL of the article
           required: true
           schema:
