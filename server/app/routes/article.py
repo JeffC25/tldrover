@@ -1,26 +1,34 @@
 from fastapi import APIRouter, HTTPException, Query
-from pydantic import BaseModel
-from api.schemas import ExtractResponse
+from app.api.schemas import ExtractResponse
 from urllib.parse import urlparse
 from newspaper import Article
+# from app.main import config
 
 router = APIRouter()
 
+def validURL(url):
+    url = urlparse(url)
+    return bool(url.scheme) and bool(url.netloc)
+
 def getArticle(url):
-    article = Article(url)
-    article.download()
-    article.parse()
-    article.nlp()
+    try:
+        article = Article(url)
+        article.download()
+        article.parse()
+        article.nlp()
+    except Exception as e:
+        print(e)
+        raise e
 
     return article.text
 
     
-@router.get("/article", response_model=ExtractResponse)
+@router.get("/article",  response_model=ExtractResponse)
 async def article(url: str = Query(..., description="URL of the article")):
-    if not url:
+    if not url or url == "":
         raise HTTPException(status_code=400, detail="URL is required.")
     
-    if not urlparse(url).scheme and not urlparse(url).netloc:
+    if not validURL(url):
         raise HTTPException(status_code=400, detail="URL is invalid.")
     
     try:

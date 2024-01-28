@@ -14,9 +14,13 @@ class AnalysisRequest(BaseModel):
     text: str
     summary: bool
     keywords: bool
-    polarity: bool
+    sentiment: bool
+
+class Sentiment(BaseModel):
+    label: str
+    score: float
 
 class AnalysisResponse(BaseModel):
     summary: Optional[str] = None
     keywords: Optional[List[str]] = None
-    polarity: Optional[float] = None
+    sentiment: Optional[Sentiment] = None
