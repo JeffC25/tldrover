@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException, Query
 from app.api.schemas import ExtractResponse
 from urllib.parse import urlparse
 from newspaper import Article
+import os
 # from app.main import config
 
 router = APIRouter()
@@ -11,6 +12,8 @@ def validURL(url):
     return bool(url.scheme) and bool(url.netloc)
 
 def getArticle(url):
+    
+    print("NLTK data directory:", os.environ["NLTK_DATA"])
     try:
         article = Article(url)
         article.download()

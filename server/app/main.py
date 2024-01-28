@@ -18,8 +18,9 @@ nltk_data_dir.mkdir(parents=True, exist_ok=True)
 
 # Download nltk data if it's not already present
 try:
+    nltk.data.path.append(str(nltk_data_dir.resolve()))
     _ = nltk.data.find('tokenizers/punkt')
-except LookupError:
+except:
     nltk.download('punkt', download_dir=os.environ["NLTK_DATA"])
 
 # Import the remaining packages that might depend on the cache dir
