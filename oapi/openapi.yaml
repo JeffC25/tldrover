@@ -122,13 +122,13 @@ components:
           type: boolean
         keywords:
           type: boolean
-        polarity:
+        sentiment:
           type: boolean
       required:
         - text
         - summary
         - keywords
-        - polarity
+        - sentiment
     AnalysisResponse:
       type: object
       properties:
@@ -140,6 +140,12 @@ components:
           items:
             type: string
             example: "keyword"
-        polarity:
-          type: number
-          example: 2.5
+        sentiment:
+          type: object
+          properties:
+            label:
+              type: string
+              example: "positive"
+            score:
+              type: number
+              example: 0.9
