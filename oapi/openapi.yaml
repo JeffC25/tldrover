@@ -137,7 +137,3 @@ components:
         polarity:
           type: number
           example: 2.5
-      required:
-        - text
-        - keywords
-        - polarity
