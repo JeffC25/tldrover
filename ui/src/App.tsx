@@ -18,7 +18,7 @@ function App() {
   const [placeholder, setPlaceholder] = useState<string>('Enter text...');
   const [content, setContent] = useState<string>('');
   const [url, setUrl] = useState<string>('');
-  const [file, setFile] = useState<File>();
+  // const [file, setFile] = useState<File | null>();
 
   const [loadingInput, setLoadingInput] = useState<boolean>(false);
   const [loadingOutput, setLoadingOutput] = useState<boolean>(false);
@@ -47,7 +47,7 @@ function App() {
       setContent(data.content);
       setPlaceholder('Enter text...');
     } catch (error) {
-      // setIsError(true);
+      console.error('Error getting article:', error);
       setPlaceholder('There was an error getting the article.')
       setContent('');
     }
@@ -55,32 +55,40 @@ function App() {
     setLoadingInput(false);
   }
 
-  const fetchFile = async () => {
-    setLoadingOutput(true);
+  const fetchFile = async (file: File) => {
     setIsError(false);
     setLoadingInput(true);
-    // setPlaceholder('Loading...');
-    try {
-      const response = await fetch(`http://localhost:8000/file/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ url: content }),
-      });
 
-      const data = await response.json();
-
-      setContent(data.content);
-      
-      setPlaceholder('Enter text...');
-    } catch (error) {
-      // setIsError(true);
-      setPlaceholder('There was an error extracting the text.');
-      setContent('');
+    // Create a FormData object and append the file
+    const formData = new FormData();
+    if (file) {
+        formData.append('file', file);
     }
+
+    try {
+        const response = await fetch(`http://localhost:8000/file/`, {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        setContent(data.content);
+
+        setPlaceholder('Enter text...');
+    } catch (error) {
+        console.error('Error uploading file:', error);
+        setPlaceholder('There was an error extracting the text.');
+        setContent('');
+    }
+
     setLoadingInput(false);
-  }
+}
+
 
   const fetchAnalysis = async () => {
     setLoadingOutput(true);
@@ -101,6 +109,7 @@ function App() {
       setKeywords(data.keywords || []);
       setSentiment(data.sentiment || {label: '', score: 0});
     } catch (error) {
+      console.error('Error analyzing text:', error);
       setIsError(true);
     }
 
@@ -126,14 +135,14 @@ function App() {
         </div>
 
         {/* PDF and URL Input */}
-        <div className="flex flex-col space-y-2">
-          <form className="w-full border rounded-md flex-shrink-0 border-lime-500 hover:bg-lime-500 hover:text-white py-1">
-            <label htmlFor="file" className="h-full p-1 rounded-md">Upload PDF</label>
-            <input type="file" id="file" onChange={() => setFile(file)} className="invisible py-0 h-0 w-0"/>
+        <div className="w-full flex flex-col space-y-2">
+          <form className="w-full border rounded-md border-lime-500 hover:bg-lime-500 hover:text-white flex">
+            <label htmlFor="file" className="h-full flex-grow p-1 rounded-md cursor-pointer">Upload PDF</label>
+            <input type="file" id="file" onChange={(e) => {e.target.files && e.target.files.length > 0 && fetchFile(e.target.files[0])}} className="invisible py-0 h-0 w-0"/>
           </form>
 
           <form onSubmit={(e) => {e.preventDefault(); fetchArticle()}} className="w-full border rounded-md flex-shrink-0 border-lime-500 ">
-            <input type="url" id="url" onChange={(e) => setUrl(e.target.value)} placeholder="Enter article URL..." className="h-full p-1 rounded-md"/>
+            <input type="url" id="url" onChange={(e) => setUrl(e.target.value)} placeholder="Enter article URL..." className="h-full p-1 rounded-md focus:outline-none"/>
           </form>
         </div>
 
@@ -150,10 +159,10 @@ function App() {
       </div>
   
       {/* Input */}
-      <div className="relative shadow-inner border border-neutral-600 rounded-md w-1/3 p-1">
+      <div className="relative shadow-inner border border-neutral-600 rounded-md w-1/3">
         {loadingInput 
         ? <div className="absolute flex justify-center items-center w-full h-full"><img className="aspect-square h-1/6 w-1/6 animate-spin" src={SpinnerIcon}/></div> 
-        : <textarea placeholder={placeholder} value={content} onChange={(e) => {setContent(e.target.value); setPlaceholder('Enter text...')}} className="w-full h-full resize-none p-2 rounded-md"></textarea>}
+        : <textarea placeholder={placeholder} value={content} onChange={(e) => {setContent(e.target.value); setPlaceholder('Enter text...')}} className="w-full h-full resize-none p-2 rounded-md focus:outline-none"></textarea>}
       </div>
       
       {/* Output */}
