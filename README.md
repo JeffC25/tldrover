@@ -1,7 +1,11 @@
-# smart-article-analyzer-v2
+# TLDRover
 🚧 Under Construction 🚧
 
 Currently reimplementing https://github.com/JeffC25/smart-article-analyzer-old
 
-#### Gallery
-![image](https://github.com/JeffC25/tldrover/assets/34695547/110d411c-f235-4842-b4da-79a72d0f3cdb)
+#### Demo
+![demo](https://github.com/JeffC25/tldrover/assets/34695547/de94b4f7-0fac-4dc5-acc5-baaa8367a933)
+
+### Setup
+
+### API
