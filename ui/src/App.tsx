@@ -35,14 +35,19 @@ function App() {
   const [sentiment, setSentiment] = useState<Sentiment>({label: '', score: 0});
 
   const fetchArticle = async () => {
-    console.log(url);
+    setSummary('');
+    setKeywords([]);
+    setSentiment({label: '', score: 0});
     setIsError(false);
     setLoadingInput(true);
-    // setPlaceholder('Loading...');
 
     try {
       const response = await fetch(`http://localhost:8000/article?url=${url}`);
       const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
       setContent(data.content);
       setPlaceholder('Enter text...');
@@ -56,6 +61,9 @@ function App() {
   }
 
   const fetchFile = async (file: File) => {
+    setSummary('');
+    setKeywords([]);
+    setSentiment({label: '', score: 0});
     setIsError(false);
     setLoadingInput(true);
 
@@ -91,6 +99,9 @@ function App() {
 
 
   const fetchAnalysis = async () => {
+    setSummary('');
+    setKeywords([]);
+    setSentiment({label: '', score: 0});
     setLoadingOutput(true);
     setIsError(false);
 
@@ -102,8 +113,10 @@ function App() {
         },
         body: JSON.stringify({ text: content, summary: items[0].isChecked, keywords: items[1].isChecked, sentiment: items[2].isChecked}),
       });
-
       const data = await response.json();
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
       setSummary(data.summary || '');
       setKeywords(data.keywords || []);
@@ -112,7 +125,6 @@ function App() {
       console.error('Error analyzing text:', error);
       setIsError(true);
     }
-
     setLoadingOutput(false);
   }
 
@@ -159,14 +171,14 @@ function App() {
       </div>
   
       {/* Input */}
-      <div className="relative shadow-inner border border-neutral-600 rounded-md w-1/3">
+      <div className="relative shadow-inner border border-neutral-400 rounded-md w-1/3">
         {loadingInput 
         ? <div className="absolute flex justify-center items-center w-full h-full"><img className="aspect-square h-1/6 w-1/6 animate-spin" src={SpinnerIcon}/></div> 
-        : <textarea placeholder={placeholder} value={content} onChange={(e) => {setContent(e.target.value); setPlaceholder('Enter text...')}} className="w-full h-full resize-none p-2 rounded-md focus:outline-none"></textarea>}
+        : <textarea placeholder={placeholder} value={content} onChange={(e) => {setContent(e.target.value); setPlaceholder('Enter text...')}} className="w-full h-full resize-none p-4 rounded-md focus:outline-none"></textarea>}
       </div>
       
       {/* Output */}
-      <div className={`relative shadow-inner p-2 border border-neutral-600 rounded-md w-1/3 resize-none`}>
+      <div className={`relative shadow-inner p-4 border border-neutral-400 rounded-md w-1/3 resize-none`}>
         {isError && <span className="text-red-500">Error</span>}
         {loadingOutput && <div className="absolute flex justify-center items-center w-full h-full"><img className="aspect-square h-1/6 w-1/6 animate-spin" src={SpinnerIcon}/></div>}
         {summary.length == 0 && keywords.length == 0 && sentiment.label == '' && !loadingOutput && !isError && <p className="text-neutral-500">Output will be here...</p>}
@@ -176,20 +188,20 @@ function App() {
             <p className="mb-6">{summary}</p>
           </>
         )}
+        {sentiment.label && (
+          <>
+            <h3 className="text-lg font-semibold">Sentiment</h3>
+            <p className="mb-6">{sentiment.label.charAt(0).toUpperCase() + sentiment.label.slice(1)}</p>
+          </>
+        )}
         {keywords && keywords.length != 0 && (
           <>
             <h3 className="text-lg font-semibold">Keywords</h3>
             <ul className="mb-6">
               {keywords.map((keyword, index) => (
-                <li key={index}>{keyword}</li>
+                <li key={index}>• {keyword}</li>
               ))}
             </ul>
-          </>
-        )}
-        {sentiment.label && (
-          <>
-            <h3 className="text-lg font-semibold">Sentiment</h3>
-            <p className="mb-6">{sentiment.label}</p>
           </>
         )}
       </div>
