@@ -32,7 +32,7 @@ def analyze_sentiment(text):
     return Sentiment(label=result[0]['label'], score=result[0]['score'])
 
 @router.post("/analyze/", response_model=AnalysisResponse)
-async def analysis_route(request: AnalysisRequest):
+async def analyze(request: AnalysisRequest):
     if not (request.summary or request.keywords or request.sentiment):
         raise HTTPException(
             status_code=400, 

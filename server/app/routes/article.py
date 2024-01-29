@@ -12,7 +12,6 @@ def validURL(url):
     return bool(url.scheme) and bool(url.netloc)
 
 def getArticle(url):
-    
     print("NLTK data directory:", os.environ["NLTK_DATA"])
     try:
         article = Article(url)
