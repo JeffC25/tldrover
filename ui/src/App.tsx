@@ -9,12 +9,18 @@ interface CheckboxItem {
   isChecked: boolean;
 }
 
+interface Sentiment {
+  label: string;
+  score: number;
+}
+
 function App() {
   const [placeholder, setPlaceholder] = useState<string>('Enter text...');
   const [content, setContent] = useState<string>('');
   const [url, setUrl] = useState<string>('');
   const [file, setFile] = useState<File>();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loadingInput, setLoadingInput] = useState<boolean>(false);
+  const [loadingOutput, setLoadingOutput] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
 
   const [items, setItems] = useState<CheckboxItem[]>([
@@ -25,15 +31,15 @@ function App() {
 
   const [summary, setSummary] = useState<string>('');
   const [keywords, setKeywords] = useState<string[]>([]);
-  const [sentiment, setSentiment] = useState<number>(0);
+  const [sentiment, setSentiment] = useState<Sentiment>({label: '', score: 0});
 
-  const getArticle = async () => {
-    setLoading(true);
+  const fetchArticle = async () => {
     setIsError(false);
-    setPlaceholder('Loading...');
+    setLoadingInput(true);
+    // setPlaceholder('Loading...');
 
     try {
-      const response = await fetch(`http://localhost:8080/article/${url}`);
+      const response = await fetch(`http://localhost:8000/article/${url}`);
       const data = await response.json();
 
       setContent(data.text);
@@ -43,15 +49,16 @@ function App() {
       setPlaceholder('There was an error getting the article.')
     }
 
-    setLoading(false);
+    setLoadingInput(false);
   }
 
-  const extractText = async () => {
-    setLoading(true);
+  const fetchFile = async () => {
+    setLoadingOutput(true);
     setIsError(false);
-    setPlaceholder('Loading...');
+    setLoadingInput(true);
+    // setPlaceholder('Loading...');
     try {
-      const response = await fetch(`http://localhost:8080/extract/`, {
+      const response = await fetch(`http://localhost:8000/file/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -69,32 +76,32 @@ function App() {
       setPlaceholder('There was an error extracting the text.')
     }
 
-    setLoading(false);
+    setLoadingInput(false);
   }
 
-  const getAnalysis = async () => {
-    setLoading(true);
+  const fetchAnalysis = async () => {
+    setLoadingOutput(true);
     setIsError(false);
 
     try {
-      const response = await fetch(`http://localhost:8080/analyze/`, {
+      const response = await fetch(`http://localhost:8000/analyze/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ text: content }),
+        body: JSON.stringify({ text: content, summary: items[0].isChecked, keywords: items[1].isChecked, sentiment: items[2].isChecked}),
       });
 
       const data = await response.json();
 
-      setSummary(data.summary);
-      setKeywords(data.keywords);
-      setSentiment(data.sentiment);
+      setSummary(data.summary || '');
+      setKeywords(data.keywords || []);
+      setSentiment(data.sentiment || {label: '', score: 0});
     } catch (error) {
       setIsError(true);
     }
 
-    setLoading(false);
+    setLoadingOutput(false);
   }
 
   return (
@@ -120,14 +127,14 @@ function App() {
           <label htmlFor="file" className="w-full border rounded-md border-lime-500 p-1 hover:bg-lime-500 hover:text-white">Upload PDF</label>
           <input type="file" id="file" onChange={() => setFile(file)} className="invisible my-1 py-0 h-0 w-0"/>
 
-          <input type="url" placeholder="Enter article URL..." className="border rounded-md border-lime-500 p-1"/>
+          <input type="url" id="url" onChange={() => setUrl(url)} onSubmit={fetchArticle} placeholder="Enter article URL..." className="border rounded-md border-lime-500 p-1"/>
         </div>
 
         {/* Checkbox List */}
         <CheckboxList items={items} setItems={setItems} />
 
         {/* Analyze Button */}
-        <button onClick={getAnalysis} type="submit" className={`${content.trimStart() != '' && items.some((item) => item.isChecked) ? 'bg-lime-500 hover:animate-pulse' : 'disabled bg-neutral-200'} text-white rounded-md p-1 transition duration-300`}>Analyze</button>
+        <button onClick={fetchAnalysis} type="submit" className={`${content.trimStart() != '' && items.some((item) => item.isChecked) ? 'bg-lime-500 hover:animate-pulse' : 'disabled bg-neutral-200'} text-white rounded-md p-1 transition duration-300`}>Analyze</button>
         
         {/* <div className="flex-grow"></div>
 
@@ -136,32 +143,36 @@ function App() {
       </div>
   
       {/* Textareas */}
-      <textarea placeholder={placeholder} value={content} onChange={(e) => {setContent(e.target.value); setPlaceholder('Enter text...')}} className="shadow-inner p-2 border border-neutral-600 rounded-md w-1/3 resize-none"></textarea>
+      <div className="shadow-inner p-2 border border-neutral-600 rounded-md w-1/3 ">
+        {loadingInput && <div className="absolute flex justify-center items-center w-full h-full"><img className="aspect-square h-1/6 w-1/6 animate-spin" src={SpinnerIcon}/></div>}
+        <textarea placeholder={placeholder} value={content} onChange={(e) => {setContent(e.target.value); setPlaceholder('Enter text...')}} className="w-full h-full resize-none"></textarea>
+
+      </div>
       
       <div className={`relative shadow-inner p-2 border border-neutral-600 rounded-md w-1/3 resize-none`}>
         {isError && <span className="text-red-500">Error</span>}
-        {loading && <div className="absolute flex justify-center items-center w-full h-full"><img className="aspect-square h-1/6 w-1/6 animate-spin" src={SpinnerIcon}/></div>}
-        {summary === '' && !loading && !isError && <p className="text-neutral-500">Output will be here...</p>}
-        {summary !== '' && items[0].isChecked && (
+        {loadingOutput && <div className="absolute flex justify-center items-center w-full h-full"><img className="aspect-square h-1/6 w-1/6 animate-spin" src={SpinnerIcon}/></div>}
+        {summary.length == 0 && keywords.length == 0 && sentiment.label == '' && !loadingOutput && !isError && <p className="text-neutral-500">Output will be here...</p>}
+        {summary && (
           <>
             <h3 className="text-lg font-semibold">Summary</h3>
-            <p>{summary}</p>
+            <p className="mb-6">{summary}</p>
           </>
         )}
-        {keywords.length !== 0 && items[1].isChecked && (
+        {keywords && keywords.length != 0 && (
           <>
             <h3 className="text-lg font-semibold">Keywords</h3>
-            <ul>
+            <ul className="mb-6">
               {keywords.map((keyword, index) => (
                 <li key={index}>{keyword}</li>
               ))}
             </ul>
           </>
         )}
-        {sentiment !== 0 && items[2].isChecked && (
+        {sentiment.label && (
           <>
             <h3 className="text-lg font-semibold">Sentiment</h3>
-            <p>{sentiment}</p>
+            <p className="mb-6">{sentiment.label}</p>
           </>
         )}
       </div>
