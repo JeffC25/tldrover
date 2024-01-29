@@ -148,7 +148,7 @@ function App() {
 
         {/* PDF and URL Input */}
         <div className="w-full flex flex-col space-y-2">
-          <form className="w-full border rounded-md border-lime-500 hover:bg-lime-500 hover:text-white flex">
+          <form className="w-full border rounded-md border-lime-500 hover:bg-lime-500 hover:text-white duration-300 flex">
             <label htmlFor="file" className="h-full flex-grow p-1 rounded-md cursor-pointer">Upload PDF</label>
             <input type="file" id="file" onChange={(e) => {e.target.files && e.target.files.length > 0 && fetchFile(e.target.files[0])}} className="invisible py-0 h-0 w-0"/>
           </form>
