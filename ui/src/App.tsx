@@ -26,8 +26,8 @@ function App() {
 
   const [items, setItems] = useState<CheckboxItem[]>([
     { id: 1, value: 'Summary', isChecked: true },
-    { id: 2, value: 'Keywords', isChecked: true },
-    { id: 3, value: 'Sentiment', isChecked: true },
+    { id: 2, value: 'Sentiment', isChecked: true },
+    { id: 3, value: 'Keywords', isChecked: true },
   ]);
 
   const [summary, setSummary] = useState<string>('');
@@ -44,7 +44,7 @@ function App() {
     try {
       const response = await fetch(`http://localhost:8000/article?url=${url}`);
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -111,7 +111,7 @@ function App() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ text: content, summary: items[0].isChecked, keywords: items[1].isChecked, sentiment: items[2].isChecked}),
+        body: JSON.stringify({ text: content, summary: items[0].isChecked, sentiment: items[1].isChecked, keywords: items[2].isChecked}),
       });
       const data = await response.json();
       if (!response.ok) {
@@ -178,9 +178,9 @@ function App() {
       </div>
       
       {/* Output */}
-      <div className={`relative shadow-inner p-4 border border-neutral-400 rounded-md w-1/3 resize-none`}>
-        {isError && <span className="text-red-500">Error</span>}
-        {loadingOutput && <div className="absolute flex justify-center items-center w-full h-full"><img className="aspect-square h-1/6 w-1/6 animate-spin" src={SpinnerIcon}/></div>}
+      <div className={`relative shadow-inner p-4 border border-neutral-400 rounded-md w-1/3 resize-none overflow-y-auto`}>
+        {isError && <span className="text-red-500">There was an error analyzing your text.</span>}
+        {loadingOutput && <div className="static flex justify-center items-center w-full h-full"><img className="aspect-square h-1/6 w-1/6 animate-spin" src={SpinnerIcon}/></div>}
         {summary.length == 0 && keywords.length == 0 && sentiment.label == '' && !loadingOutput && !isError && <p className="text-neutral-500">Output will be here...</p>}
         {summary && (
           <>
