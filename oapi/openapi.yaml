@@ -4,7 +4,7 @@ info:
   description: Text Analysis Application
   version: 0.0.1
 servers:
-  - url: http://localhost:8080/api
+  - url: http://localhost:8000/
 paths:
   /file/:
     post:
