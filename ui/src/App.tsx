@@ -19,6 +19,7 @@ function App() {
   const [content, setContent] = useState<string>('');
   const [url, setUrl] = useState<string>('');
   const [file, setFile] = useState<File>();
+
   const [loadingInput, setLoadingInput] = useState<boolean>(false);
   const [loadingOutput, setLoadingOutput] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
@@ -34,19 +35,21 @@ function App() {
   const [sentiment, setSentiment] = useState<Sentiment>({label: '', score: 0});
 
   const fetchArticle = async () => {
+    console.log(url);
     setIsError(false);
     setLoadingInput(true);
     // setPlaceholder('Loading...');
 
     try {
-      const response = await fetch(`http://localhost:8000/article/${url}`);
+      const response = await fetch(`http://localhost:8000/article?url=${url}`);
       const data = await response.json();
 
-      setContent(data.text);
+      setContent(data.content);
       setPlaceholder('Enter text...');
     } catch (error) {
       // setIsError(true);
       setPlaceholder('There was an error getting the article.')
+      setContent('');
     }
 
     setLoadingInput(false);
@@ -68,14 +71,14 @@ function App() {
 
       const data = await response.json();
 
-      setContent(data.text);
+      setContent(data.content);
       
       setPlaceholder('Enter text...');
     } catch (error) {
       // setIsError(true);
-      setPlaceholder('There was an error extracting the text.')
+      setPlaceholder('There was an error extracting the text.');
+      setContent('');
     }
-
     setLoadingInput(false);
   }
 
@@ -123,11 +126,15 @@ function App() {
         </div>
 
         {/* PDF and URL Input */}
-        <div className="flex flex-col">
-          <label htmlFor="file" className="w-full border rounded-md border-lime-500 p-1 hover:bg-lime-500 hover:text-white">Upload PDF</label>
-          <input type="file" id="file" onChange={() => setFile(file)} className="invisible my-1 py-0 h-0 w-0"/>
+        <div className="flex flex-col space-y-2">
+          <form className="w-full border rounded-md flex-shrink-0 border-lime-500 hover:bg-lime-500 hover:text-white py-1">
+            <label htmlFor="file" className="h-full p-1 rounded-md">Upload PDF</label>
+            <input type="file" id="file" onChange={() => setFile(file)} className="invisible py-0 h-0 w-0"/>
+          </form>
 
-          <input type="url" id="url" onChange={() => setUrl(url)} onSubmit={fetchArticle} placeholder="Enter article URL..." className="border rounded-md border-lime-500 p-1"/>
+          <form onSubmit={(e) => {e.preventDefault(); fetchArticle()}} className="w-full border rounded-md flex-shrink-0 border-lime-500 ">
+            <input type="url" id="url" onChange={(e) => setUrl(e.target.value)} placeholder="Enter article URL..." className="h-full p-1 rounded-md"/>
+          </form>
         </div>
 
         {/* Checkbox List */}
@@ -142,13 +149,14 @@ function App() {
 
       </div>
   
-      {/* Textareas */}
-      <div className="shadow-inner p-2 border border-neutral-600 rounded-md w-1/3 ">
-        {loadingInput && <div className="absolute flex justify-center items-center w-full h-full"><img className="aspect-square h-1/6 w-1/6 animate-spin" src={SpinnerIcon}/></div>}
-        <textarea placeholder={placeholder} value={content} onChange={(e) => {setContent(e.target.value); setPlaceholder('Enter text...')}} className="w-full h-full resize-none"></textarea>
-
+      {/* Input */}
+      <div className="relative shadow-inner border border-neutral-600 rounded-md w-1/3 p-1">
+        {loadingInput 
+        ? <div className="absolute flex justify-center items-center w-full h-full"><img className="aspect-square h-1/6 w-1/6 animate-spin" src={SpinnerIcon}/></div> 
+        : <textarea placeholder={placeholder} value={content} onChange={(e) => {setContent(e.target.value); setPlaceholder('Enter text...')}} className="w-full h-full resize-none p-2 rounded-md"></textarea>}
       </div>
       
+      {/* Output */}
       <div className={`relative shadow-inner p-2 border border-neutral-600 rounded-md w-1/3 resize-none`}>
         {isError && <span className="text-red-500">Error</span>}
         {loadingOutput && <div className="absolute flex justify-center items-center w-full h-full"><img className="aspect-square h-1/6 w-1/6 animate-spin" src={SpinnerIcon}/></div>}
