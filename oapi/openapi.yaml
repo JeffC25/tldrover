@@ -6,13 +6,13 @@ info:
 servers:
   - url: http://localhost:8080/api
 paths:
-  /parsefile/:
+  /file/:
     post:
       summary: Request to parse file
-      operationId: parseFile
+      operationId: file
       requestBody:
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
@@ -28,7 +28,12 @@ paths:
             application/json:
               schema: 
                 $ref: "#/components/schemas/ExtractResponse"
-                
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
         "500":
           description: Internal Server Error
           content:
