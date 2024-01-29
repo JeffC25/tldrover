@@ -1,22 +1,25 @@
 from fastapi import APIRouter, HTTPException, UploadFile, File
 from app.api.schemas import ExtractResponse
 import pypdf
+import io
 
 router = APIRouter()
 
-def parsePDF(file):
+def parsePDF(file: File):
     try:
-        pdf = pypdf.PdfFileReader(file)
+        buffer = io.BytesIO(file.file.read())
+        pdf = pypdf.PdfReader(buffer)
         content = ""
         for page in pdf.pages:
-            content += page.extractText()
-        return content
+            content += page.extract_text()
+        return content.replace('\n', ' ').replace('\r', '')
     except Exception as e:
         print(e)
         raise e
 
 @router.post("/file",  response_model=ExtractResponse)
 async def fild(file: UploadFile = File(...)):
+    print(file)
     if not file:
         raise HTTPException(status_code=400, detail="File is required.")
 
