@@ -142,7 +142,7 @@ function App() {
           </form>
 
           <form onSubmit={(e) => {e.preventDefault(); fetchArticle()}} className="w-full border rounded-md flex-shrink-0 border-lime-500 ">
-            <input type="url" id="url" onChange={(e) => setUrl(e.target.value)} placeholder="Enter article URL..." className="h-full p-1 rounded-md focus:outline-none"/>
+            <input type="url" id="url" onChange={(e) => setUrl(e.target.value)} placeholder="Enter article URL..." autoComplete="off" className="h-full p-1 rounded-md focus:outline-none"/>
           </form>
         </div>
 
