@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 import nltk
 from app.config import config
+from fastapi.middleware.cors import CORSMiddleware
 
 # Resolve paths relative to the script file
 script_dir = Path(__file__).resolve().parent
@@ -29,7 +30,18 @@ from app.routes import analyze, article, file
 
 # Create the FastAPI app instance
 app = FastAPI()
+# Configure CORS
+origins = [
+    "http://localhost:5173",
+]
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # Include routers from other modules
 app.include_router(analyze.router)
 app.include_router(article.router)
