@@ -25,7 +25,7 @@ except:
 
 # Import the remaining packages that might depend on the cache dir
 from fastapi import FastAPI
-from app.routes import analyze, article
+from app.routes import analyze, article, file
 
 # Create the FastAPI app instance
 app = FastAPI()
@@ -33,6 +33,7 @@ app = FastAPI()
 # Include routers from other modules
 app.include_router(analyze.router)
 app.include_router(article.router)
+app.include_router(file.router)
 
 # For debugging: Print the cache directories
 print("Transformers cache directory:", os.environ["HF_HOME"])
