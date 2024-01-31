@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Smart Article Analyzer
   description: Text Analysis Application
-  version: 0.0.1
+  version: 0.1.0
 servers:
   - url: http://localhost:8000/
 paths:
@@ -70,15 +70,15 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  /analyze:
+  /summary:
     post:
-      summary: Request to analyze text
-      operationId: analyze
+      summary: Request to summarize text
+      operationId: summary
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/AnalysisRequest"
+              $ref: "#/components/schemas/SummaryRequest"
         required: true
       responses:
         "200":
@@ -86,7 +86,65 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ExtractResponse"
+                $ref: "#/components/schemas/SummaryResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /keywords:
+    post:
+      summary: Request to get keywords
+      operationId: keywords
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KeywordsRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KeywordsResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /sentiment:
+    post:
+      summary: Request to get sentiment analysis
+      operationId: sentiment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SentimentRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SentimentResponse"
         "400":
           description: Bad Request
           content:
@@ -117,40 +175,69 @@ components:
           example: "Extracted content here"
       required:
         - content
-    AnalysisRequest:
+    SummaryRequest:
       type: object
       properties:
         text:
           type: string
           example: "Text here"
-        summary:
-          type: boolean
-        keywords:
-          type: boolean
-        sentiment:
-          type: boolean
       required:
         - text
-        - summary
-        - keywords
-        - sentiment
-    AnalysisResponse:
+    SummaryResponse:
       type: object
       properties:
         text:
           type: string
           example: "Summary here"
+      required:
+        - text
+    KeywordsRequest:
+      type: object
+      properties:
+        text:
+          type: string
+          example: "Text here"
+        minScore:
+          type: number
+          format: float
+          example: 0.9
+      required:
+        - text
+    KeywordsResponse:
+      type: object
+      properties:
         keywords:
           type: array
           items:
             type: string
-            example: "keyword"
-        sentiment:
-          type: object
-          properties:
-            label:
-              type: string
-              example: "positive"
-            score:
-              type: number
-              example: 0.9
+          example: ["keyword1", "keyword2"]
+      required:
+        - keywords
+        - minScore
+    SentimentRequest:
+      type: object
+      properties:
+        text:
+          type: string
+          example: "Text here"
+      required:
+        - text
+    SentimentResponse:
+      type: object
+      properties:
+        positive:
+          type: number
+          format: float
+          example: 0.5
+        neutral:
+          type: number
+          format: float
+          example: 0.3
+        negative:
+          type: number
+          format: float
+          example: 0.2
+      required:
+        - positive
+        - neutral
+        - negative
