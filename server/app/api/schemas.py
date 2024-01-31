@@ -10,17 +10,22 @@ class ExtractResponse(BaseModel):
 class ParseFileRequest(BaseModel):
     file: str
 
-class AnalysisRequest(BaseModel):
+class SummaryRequest(BaseModel):
     text: str
-    summary: bool
-    keywords: bool
-    sentiment: bool
 
-class Sentiment(BaseModel):
+class KeywordsRequest(BaseModel):
+    text: str
+    minScore: Optional[float] = 0.9
+
+class SentimentRequest(BaseModel):
+    text: str
+
+class SummaryResponse(BaseModel):
+    summary: str
+
+class KeywordsResponse(BaseModel):
+    keywords: List[str]
+
+class SentimentResponse(BaseModel):
     label: str
     score: float
-
-class AnalysisResponse(BaseModel):
-    summary: Optional[str] = None
-    keywords: Optional[List[str]] = None
-    sentiment: Optional[Sentiment] = None
