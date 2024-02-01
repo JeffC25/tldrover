@@ -5,6 +5,7 @@ from app.api.schemas import SummaryRequest, SummaryResponse
 
 router = APIRouter()
 
+
 def summarize_text(text):
     tokenizer = AutoTokenizer.from_pretrained(config['summarization_model'])
     summarizer = pipeline("summarization", model=config['summarization_model'])
@@ -30,6 +31,7 @@ def summarize_text(text):
         start = end
 
     return summarized_text
+
 
 @router.post("/summary/")
 async def summarize(request: SummaryRequest):
