@@ -21,10 +21,10 @@ nltk_data_dir.mkdir(parents=True, exist_ok=True)
 try:
     nltk.data.path.append(str(nltk_data_dir.resolve()))
     _ = nltk.data.find('tokenizers/punkt')
-except:
+except LookupError:
     nltk.download('punkt', download_dir=os.environ["NLTK_DATA"])
 
-# Import the remaining packages that might depend on the cache dir
+# Import the remaining packages that depend on the cache dir
 from fastapi import FastAPI
 from app.routes import article, file, summary, keywords, sentiment
 
