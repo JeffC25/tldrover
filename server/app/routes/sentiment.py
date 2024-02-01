@@ -5,10 +5,12 @@ from app.config import config
 
 router = APIRouter()
 
+
 def analyze_sentiment(text):
     sentiment_analyzer = pipeline("sentiment-analysis", model=config['sentiment_analysis_model'], max_length=512)
     result = sentiment_analyzer(text)
     return (result[0]['label'], result[0]['score'])
+
 
 @router.post("/sentiment/")
 async def analyze_sentiment_route(request: SentimentRequest):

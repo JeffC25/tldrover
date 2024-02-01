@@ -7,9 +7,11 @@ import os
 
 router = APIRouter()
 
+
 def validURL(url):
     url = urlparse(url)
     return bool(url.scheme) and bool(url.netloc)
+
 
 def getArticle(url):
     print("NLTK data directory:", os.environ["NLTK_DATA"])
@@ -24,15 +26,15 @@ def getArticle(url):
 
     return article.text
 
-    
-@router.get("/article",  response_model=ExtractResponse)
+
+@router.get("/article", response_model=ExtractResponse)
 async def article(url: str = Query(..., description="URL of the article")):
     if not url or url == "":
         raise HTTPException(status_code=400, detail="URL is required.")
-    
+
     if not validURL(url):
         raise HTTPException(status_code=400, detail="URL is invalid.")
-    
+
     try:
         content = getArticle(url)
         if content == "":

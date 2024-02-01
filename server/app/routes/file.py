@@ -5,6 +5,7 @@ import io
 
 router = APIRouter()
 
+
 def parsePDF(file: File):
     try:
         buffer = io.BytesIO(file.file.read())
@@ -17,17 +18,18 @@ def parsePDF(file: File):
         print(e)
         raise e
 
-@router.post("/file",  response_model=ExtractResponse)
+
+@router.post("/file", response_model=ExtractResponse)
 async def fild(file: UploadFile = File(...)):
     print(file)
     if not file:
         raise HTTPException(status_code=400, detail="File is required.")
 
-    try: 
+    try:
         content = parsePDF(file)
         if content == "":
             raise HTTPException(status_code=500, detail="Could not extract text from the file.")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
+
     return ExtractResponse(content=content)
