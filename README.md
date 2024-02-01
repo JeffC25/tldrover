@@ -22,3 +22,10 @@ To run the backend:
 
 ## API
 The OpenAPI document for the server is available [here](https://github.com/JeffC25/tldrover/blob/main/oapi/openapi.yaml).
+
+The API currently supports the following endpoints:
+- `/summary/` to generate summary from a text
+- `/keywords/` to extract keywords from a text
+- `/sentiment/` to analyze sentiment from a text
+- `/article/` to extract text from an article
+- `/file/` to extract text from a PDF file
