@@ -28,4 +28,5 @@ jobs:
 
     - name: Run Flake8
       run: |
-        flake8 server/app/
+        cd server
+        flake8
