@@ -1,0 +1,36 @@
+name: Node.js Linting
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'ui/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'ui/**'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x]
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Change directory to /ui and Install dependencies
+      run: |
+        cd ui
+        npm install
+
+    - name: Run lint
+      run: |
+        cd ui
+        npm run lint
