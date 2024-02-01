@@ -225,19 +225,13 @@ components:
     SentimentResponse:
       type: object
       properties:
-        positive:
+        label:
+          type: string
+          example: "positive"
+        score:
           type: number
           format: float
-          example: 0.5
-        neutral:
-          type: number
-          format: float
-          example: 0.3
-        negative:
-          type: number
-          format: float
-          example: 0.2
+          example: 0.9
       required:
-        - positive
-        - neutral
-        - negative
+        - label
+        - score
