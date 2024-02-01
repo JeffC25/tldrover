@@ -1,1 +1,5 @@
-/app/storage/*
+/app/storage/
+/app/pycache/
+.venv/
+*.md
+*.pyc
