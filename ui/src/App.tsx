@@ -18,11 +18,15 @@ function App() {
   const [placeholder, setPlaceholder] = useState<string>('Enter text...');
   const [content, setContent] = useState<string>('');
   const [url, setUrl] = useState<string>('');
-  // const [file, setFile] = useState<File | null>();
 
   const [loadingInput, setLoadingInput] = useState<boolean>(false);
+  const [loadingInputStatus, setLoadingInputStatus] = useState<string>('');
   const [loadingOutput, setLoadingOutput] = useState<boolean>(false);
-  const [isError, setIsError] = useState<boolean>(false);
+  const [loadingOutputStatus, setLoadingOutputStatus] = useState<string>('');
+
+  const [summaryError, setSummaryError] = useState<boolean>(false);
+  const [keywordsError, setKeywordsError] = useState<boolean>(false);
+  const [sentimentError, setSentimentError] = useState<boolean>(false);
 
   const [items, setItems] = useState<CheckboxItem[]>([
     { id: 1, value: 'Summary', isChecked: true },
@@ -38,10 +42,10 @@ function App() {
     setSummary('');
     setKeywords([]);
     setSentiment({label: '', score: 0});
-    setIsError(false);
     setLoadingInput(true);
 
     try {
+      setLoadingInputStatus("Extracting article...");
       const response = await fetch(`http://localhost:8000/article?url=${url}`);
       const data = await response.json();
 
@@ -64,7 +68,6 @@ function App() {
     setSummary('');
     setKeywords([]);
     setSentiment({label: '', score: 0});
-    setIsError(false);
     setLoadingInput(true);
 
     // Create a FormData object and append the file
@@ -74,6 +77,7 @@ function App() {
     }
 
     try {
+        setLoadingInputStatus("Extracting file...");
         const response = await fetch(`http://localhost:8000/file/`, {
             method: 'POST',
             body: formData
@@ -102,29 +106,83 @@ function App() {
     setSummary('');
     setKeywords([]);
     setSentiment({label: '', score: 0});
+
     setLoadingOutput(true);
-    setIsError(false);
 
-    try {
-      const response = await fetch(`http://localhost:8000/analyze/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ text: content, summary: items[0].isChecked, sentiment: items[1].isChecked, keywords: items[2].isChecked}),
-      });
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+    setSummaryError(false);
+    setKeywordsError(false);
+    setSentimentError(false);
+
+    if (items[2].isChecked) {
+      try {
+        setLoadingOutputStatus("Extracting keywords...");
+        const response = await fetch('http://localhost:8000/keywords', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              text: content,
+              minScore: 0.9
+            })
+        });
+        const data = await response.json();
+        if (!response.ok) {
+          setKeywordsError(true);
+        }
+        setKeywords(data.keywords);
+      } catch (error) {
+        console.error('Error extracting keywords:', error);
+        setKeywordsError(true);
       }
-
-      setSummary(data.summary || '');
-      setKeywords(data.keywords || []);
-      setSentiment(data.sentiment || {label: '', score: 0});
-    } catch (error) {
-      console.error('Error analyzing text:', error);
-      setIsError(true);
     }
+
+    if (items[1].isChecked) {
+      try {
+        setLoadingOutputStatus("Analyzing sentiment...");
+        const response = await fetch('http://localhost:8000/sentiment', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              text: content
+            })
+        });
+        const data = await response.json();
+        if (!response.ok) {
+          setSentimentError(true);
+        }
+        setSentiment({label: data.label, score: data.score});
+      } catch (error) {
+        console.error('Error analyzing sentiment:', error);
+        setSentimentError(true);
+      }
+    }
+
+    if (items[0].isChecked) {
+      try {
+        setLoadingOutputStatus("Generating summary...");
+        const response = await fetch('http://localhost:8000/summary', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              text: content
+            })
+        });
+        const data = await response.json();
+        if (!response.ok) {
+          setSummaryError(true);
+        }
+        setSummary(data.summary);
+      } catch (error) {
+        console.error('Error extracting summary:', error);
+        setSummaryError(true);
+      }
+    }
+
     setLoadingOutput(false);
   }
 
@@ -173,15 +231,22 @@ function App() {
       {/* Input */}
       <div className="relative shadow-inner border border-neutral-400 rounded-md w-1/3">
         {loadingInput 
-        ? <div className="absolute flex justify-center items-center w-full h-full"><img className="aspect-square h-1/6 w-1/6 animate-spin" src={SpinnerIcon}/></div> 
+        ? <div className="absolute top-0 left-0 pb-20 flex flex-col justify-center items-center h-full w-full bg-white">
+            <img className="aspect-square h-1/6 w-1/6 animate-spin block" src={SpinnerIcon}/>
+            {loadingInputStatus && <span className="text-neutral-500 block w-full text-center">{loadingInputStatus}</span>}
+          </div>
         : <textarea placeholder={placeholder} value={content} onChange={(e) => {setContent(e.target.value); setPlaceholder('Enter text...')}} className="w-full h-full resize-none p-4 rounded-md focus:outline-none"></textarea>}
       </div>
       
       {/* Output */}
       <div className={`relative shadow-inner p-4 border border-neutral-400 rounded-md w-1/3 resize-none overflow-y-auto`}>
-        {isError && <span className="text-red-500">There was an error analyzing your text.</span>}
-        {loadingOutput && <div className="static flex justify-center items-center w-full h-full"><img className="aspect-square h-1/6 w-1/6 animate-spin" src={SpinnerIcon}/></div>}
-        {summary.length == 0 && keywords.length == 0 && sentiment.label == '' && !loadingOutput && !isError && <p className="text-neutral-500">Output will be here...</p>}
+        {loadingOutput && 
+          <div className="absolute top-0 left-0 pb-20 flex flex-col justify-center items-center h-full w-full bg-white">
+            <img className="aspect-square h-1/6 w-1/6 animate-spin block" src={SpinnerIcon}/>
+            {loadingOutputStatus && <span className="text-neutral-500 block w-full text-center">{loadingOutputStatus}</span>}
+          </div>
+        }
+        {summary.length == 0 && keywords.length == 0 && sentiment.label == '' && !loadingOutput && !summaryError && !keywordsError && !sentimentError && <p className="text-neutral-500">Output will be here...</p>}
         {summary && (
           <>
             <h3 className="text-lg font-semibold">Summary</h3>
@@ -204,6 +269,9 @@ function App() {
             </ul>
           </>
         )}
+        {summaryError && <span className="text-red-500 block">There was an error generating your summary</span>}
+        {sentimentError && <span className="text-red-500 block">There was an error analyzing the sentiment</span>}
+        {keywordsError && <span className="text-red-500 block">There was an error extracting the keywords</span>}
       </div>
     </div>
   )
