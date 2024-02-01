@@ -46,7 +46,7 @@ function App() {
 
     try {
       setLoadingInputStatus("Extracting article...");
-      const response = await fetch(`http://localhost:8000/article?url=${url}`);
+      const response = await fetch(`http://localhost:8000/article?url=${url.trim()}`);
       const data = await response.json();
 
       if (!response.ok) {
@@ -100,7 +100,6 @@ function App() {
 
     setLoadingInput(false);
 }
-
 
   const fetchAnalysis = async () => {
     setSummary('');
@@ -211,9 +210,10 @@ function App() {
             <input type="file" id="file" onChange={(e) => {e.target.files && e.target.files.length > 0 && fetchFile(e.target.files[0])}} className="invisible py-0 h-0 w-0"/>
           </form>
 
-          <form onSubmit={(e) => {e.preventDefault(); fetchArticle()}} className="w-full border rounded-md flex-shrink-0 border-lime-500 ">
-            <input type="url" id="url" onChange={(e) => setUrl(e.target.value)} placeholder="Enter article URL..." autoComplete="off" className="h-full p-1 rounded-md focus:outline-none"/>
-          </form>
+          <form onSubmit={(e) => {e.preventDefault(); fetchArticle(); (e.target as HTMLFormElement).reset()}} className="w-full rounded-md flex-shrink-0 flex flex-col space-y-2">
+            <input type="url" id="url" onChange={(e) => setUrl(e.target.value)} placeholder="Enter article URL..." autoComplete="off" className=" p-1 rounded-md focus:outline-none border border-lime-500 "/>
+            <button type="submit" className={`${url.trimStart() != '' ? 'bg-lime-500 hover:animate-pulse' : 'disabled bg-neutral-200'} text-white rounded-md p-1 transition duration-300`}>Extract Text</button>
+          </form>     
         </div>
 
         {/* Checkbox List */}
@@ -224,7 +224,7 @@ function App() {
         
         {/* <div className="flex-grow"></div>
 
-        <span className="text-neutral-500">Jeff Chen © 2024</span> */}
+        <span className="text-neutral-300 text-right font-semibold">Jeff Chen © 2024</span> */}
 
       </div>
   
