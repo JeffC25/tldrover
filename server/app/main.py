@@ -1,4 +1,5 @@
 import os
+import logging
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 from app.routes import article, file, summary, keywords, sentiment
@@ -17,6 +18,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 # Include routers from other modules
 app.include_router(article.router)
 app.include_router(file.router)
@@ -25,5 +27,5 @@ app.include_router(keywords.router)
 app.include_router(sentiment.router)
 
 # For debugging: Print the cache directories
-print("Transformers cache directory:", os.environ["HF_HOME"])
-print("NLTK data directory:", os.environ["NLTK_DATA"])
+logging.info("Transformers cache directory: " + os.environ["HF_HOME"])
+logging.info("NLTK data directory: " + os.environ["NLTK_DATA"])

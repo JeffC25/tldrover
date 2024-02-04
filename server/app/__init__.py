@@ -3,6 +3,9 @@ from app.config import config
 from pathlib import Path
 import nltk
 import os
+import logging
+
+logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s', level=logging.INFO)
 
 script_dir = Path(__file__).resolve().parent
 hf_home_dir = script_dir / config['hf_home']
