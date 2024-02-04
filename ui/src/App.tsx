@@ -29,9 +29,9 @@ function App() {
   const [sentimentError, setSentimentError] = useState<boolean>(false);
 
   const [items, setItems] = useState<CheckboxItem[]>([
-    { id: 1, value: 'Summary', isChecked: true },
-    { id: 2, value: 'Sentiment', isChecked: true },
-    { id: 3, value: 'Keywords', isChecked: true },
+    { id: 1, value: 'Summary', isChecked: false },
+    { id: 2, value: 'Sentiment', isChecked: false },
+    { id: 3, value: 'Keywords', isChecked: false },
   ]);
 
   const [summary, setSummary] = useState<string>('');
