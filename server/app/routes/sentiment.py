@@ -1,21 +1,19 @@
-from fastapi import APIRouter, HTTPException
-from transformers import pipeline
+from fastapi import APIRouter, HTTPException, Depends
 from app.api.schemas import SentimentResponse, SentimentRequest
-from app.config import config
+from ..utils.model_loader import get_sentiment_analyzer  # Adjust import path as necessary
 
 router = APIRouter()
 
 
-def analyze_sentiment(text):
-    sentiment_analyzer = pipeline("sentiment-analysis", model=config['sentiment_analysis_model'], max_length=512)
+def analyze_sentiment(text, sentiment_analyzer):
     result = sentiment_analyzer(text)
     return (result[0]['label'], result[0]['score'])
 
 
-@router.post("/sentiment/")
-async def analyze_sentiment_route(request: SentimentRequest):
+@router.post("/sentiment/", response_model=SentimentResponse)
+async def analyze_sentiment_route(request: SentimentRequest, sentiment_analyzer=Depends(get_sentiment_analyzer)):
     try:
-        sentiment = analyze_sentiment(request.text)
-        return SentimentResponse(label=sentiment[0], score=sentiment[1])
+        label, score = analyze_sentiment(request.text, sentiment_analyzer)
+        return SentimentResponse(label=label, score=score)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

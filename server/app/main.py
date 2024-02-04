@@ -1,11 +1,21 @@
 import os
 import logging
+from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 from app.routes import article, file, summary, keywords, sentiment
+from app.utils.model_loader import load_models_and_tokenizers
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    load_models_and_tokenizers()
+    logging.info("Models loaded successfully.")
+    yield
 
 # Create the FastAPI app instance
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
+
 # Configure CORS
 origins = [
     "*",

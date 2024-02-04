@@ -1,26 +1,19 @@
-from fastapi import APIRouter, HTTPException
-from transformers import pipeline, AutoTokenizer
-from app.config import config
+from fastapi import APIRouter, HTTPException, Depends
 from app.api.schemas import SummaryRequest, SummaryResponse
+from ..utils.model_loader import get_summarizer, get_summary_tokenizer
 
 router = APIRouter()
 
 
-def summarize_text(text):
-    tokenizer = AutoTokenizer.from_pretrained(config['summarization_model'])
-    summarizer = pipeline("summarization", model=config['summarization_model'])
-
-    # Split the text into chunks that fit within the model's maximum token limit
-    max_length = 1024  # Adjust as needed based on the model's limit
+def summarize_text(text, summarizer, tokenizer):
+    max_length = 1024  # Model's maximum token limit
     tokens = tokenizer(text, truncation=False, return_tensors="pt", padding=False)
     total_tokens = tokens.input_ids.size(1)
 
-    # If the text is shorter than the max_length, summarize it directly
     if total_tokens <= max_length:
         summary = summarizer(text, max_length=150, min_length=30, truncation=True)
         return summary[0]['summary_text'].replace(' .', '.')
 
-    # If the text is longer, split it and summarize each part
     summarized_text = ''
     start = 0
     while start < total_tokens:
@@ -34,9 +27,9 @@ def summarize_text(text):
 
 
 @router.post("/summary/")
-async def summarize(request: SummaryRequest):
+async def summarize_route(request: SummaryRequest, summarizer=Depends(get_summarizer), tokenizer=Depends(get_summary_tokenizer)):
     try:
-        summary = summarize_text(request.text)
+        summary = summarize_text(request.text, summarizer, tokenizer)
         return SummaryResponse(summary=summary)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
