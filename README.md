@@ -9,16 +9,23 @@ Currently reimplementing https://github.com/JeffC25/smart-article-analyzer-old
 ## Local Deveopment
 To run and develop this project locally, clone the repository and ensure that Node.js and Python are installed.
 
-To run the frontend: 
-1. navigate to `ui/`.
-2. run `npm install` to install dependencies.
-3. run `npm run dev` to start the development server.
+#### To run the frontend: 
+1. Navigate to `ui/`.
+2. Run `npm install` to install dependencies.
+3. Run `npm run dev` to start the development server.
 
-To run the backend: 
-1. navigate to `server/`.
-2. activate a Python virtual enviornment (optional).
-3. run `pip install -r requirements.txt` to install dependencies.
-4. run `uvicorn app.main:app --reload` to start the development server.
+#### To Run the backend: 
+1. Navigate to `server/`.
+2. Run `bash install.sh` or `./install.sh` to set up a Python virtual enviornment and install dependencies.
+3. Run `bash run-server.sh` or `./run-server.sh` to activate the virtual enviornment and start the development server.
+
+  or:
+
+1. Navigate to `server/`.
+2. Activate a Python virtual enviornment (optional).
+3. Run `pip install -r requirements.txt` to install dependencies.
+4. Run `uvicorn app.main:app --reload` to start the development server.
+5. To deactivate the virtual enviornment the virtual enviornment, run `deactivate`.
 
 ## API
 The OpenAPI document for the server is available [here](https://github.com/JeffC25/tldrover/blob/main/oapi/openapi.yaml).
