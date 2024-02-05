@@ -2,6 +2,7 @@ import { useState } from "react";
 import CheckboxList from "./components/CheckboxList";
 import ExitArrowIcon from "./assets/exitarrow.svg"
 import SpinnerIcon from "./assets/spinner.svg"
+import SearchNewsWidget from "./components/SearchNewsWidget";
 
 interface CheckboxItem {
   id: number;
@@ -18,6 +19,8 @@ function App() {
   const [placeholder, setPlaceholder] = useState<string>('Enter text...');
   const [content, setContent] = useState<string>('');
   const [url, setUrl] = useState<string>('');
+
+  const [searchNewsOpen, setSearchNewsOpen] = useState<boolean>(false);
 
   const [loadingInput, setLoadingInput] = useState<boolean>(false);
   const [loadingInputStatus, setLoadingInputStatus] = useState<string>('');
@@ -186,8 +189,8 @@ function App() {
   }
 
   return (
-
-    <div className="flex h-screen w-screen space-x-6 justify-center p-8 sm:p-20">
+    <>
+    <div className="flex h-screen w-screen space-x-6 justify-center sm:p-20">
       <div className="flex flex-col space-y-6 w-min">
 
         {/* Heading and GitHub Link */}
@@ -201,7 +204,10 @@ function App() {
               <span className="sm:text-xl">GitHub</span>
               <img src={ExitArrowIcon} className="inline-block w-6 h-6" alt="exit arrow" />
           </a>
+          
         </div>
+
+        {/* <div className="bg-neutral-300 w-full h-px mt-1 mb"></div> */}
 
         {/* PDF and URL Input */}
         <div className="w-full flex flex-col space-y-2">
@@ -210,22 +216,27 @@ function App() {
             <input type="file" id="file" onChange={(e) => {e.target.files && e.target.files.length > 0 && fetchFile(e.target.files[0])}} className="invisible py-0 h-0 w-0"/>
           </form>
 
-          <form onSubmit={(e) => {e.preventDefault(); fetchArticle(); (e.target as HTMLFormElement).reset()}} className="w-full rounded-md flex-shrink-0 flex flex-col space-y-2">
-            <input type="url" id="url" onChange={(e) => setUrl(e.target.value)} placeholder="Enter article URL..." autoComplete="off" className=" p-1 rounded-md focus:outline-none border border-lime-500 "/>
-            <button type="submit" className={`${url.trimStart() != '' ? 'bg-lime-500 hover:animate-pulse' : 'disabled bg-neutral-200'} text-white rounded-md p-1 transition duration-300`}>Extract Text</button>
-          </form>     
+          <button onClick={() => setSearchNewsOpen(true)} className="w-full border rounded-md border-lime-500 hover:bg-lime-500 hover:text-white duration-300 flex p-1">
+            Search Topic
+          </button>    
         </div>
 
+        {/* <div className="bg-neutral-300 w-full h-px mt-1 mb"></div> */}
+
+        <form onSubmit={(e) => {e.preventDefault(); fetchArticle(); (e.target as HTMLFormElement).reset()}} className="w-full rounded-md flex-shrink-0 flex flex-col space-y-2">
+            <input type="url" id="url" onChange={(e) => setUrl(e.target.value)} placeholder="Enter article URL..." autoComplete="off" className=" p-1 rounded-md focus:outline-none border border-lime-500 "/>
+            <button type="submit" className={`${url.trimStart() != '' ? 'bg-lime-500 hover:animate-pulse' : 'disabled bg-neutral-200'} text-white rounded-md p-1 transition duration-300`}>Extract Text</button>
+        </form> 
+
+        {/* <div className="bg-neutral-300 w-full h-px mt-1 mb"></div> */}
+
+        <div className="w-full flex flex-col space-y-2">
         {/* Checkbox List */}
-        <CheckboxList items={items} setItems={setItems} />
+          <CheckboxList items={items} setItems={setItems} />
 
-        {/* Analyze Button */}
-        <button onClick={fetchAnalysis} type="submit" className={`${content.trimStart() != '' && items.some((item) => item.isChecked) ? 'bg-lime-500 hover:animate-pulse' : 'disabled bg-neutral-200'} text-white rounded-md p-1 transition duration-300`}>Analyze</button>
-        
-        {/* <div className="flex-grow"></div>
-
-        <span className="text-neutral-300 text-right font-semibold">Jeff Chen © 2024</span> */}
-
+          {/* Analyze Button */}
+          <button onClick={fetchAnalysis} type="submit" className={`${content.trimStart() != '' && items.some((item) => item.isChecked) ? 'bg-lime-500 hover:animate-pulse' : 'disabled bg-neutral-200'} text-white rounded-md p-1 transition duration-300 w-full`}>Analyze</button>
+        </div>
       </div>
   
       {/* Input */}
@@ -269,11 +280,13 @@ function App() {
             </ul>
           </>
         )}
-        {summaryError && <span className="text-red-500 block">There was an error generating your summary</span>}
-        {sentimentError && <span className="text-red-500 block">There was an error analyzing the sentiment</span>}
-        {keywordsError && <span className="text-red-500 block">There was an error extracting the keywords</span>}
+        {summaryError && <span className="text-red-500 block">There was an error generating your summary.</span>}
+        {sentimentError && <span className="text-red-500 block">There was an error analyzing the sentiment.</span>}
+        {keywordsError && <span className="text-red-500 block">There was an error extracting the keywords.</span>}
       </div>
     </div>
+    {searchNewsOpen && <SearchNewsWidget setOpen={setSearchNewsOpen} />}
+    </>
   )
 }
 
