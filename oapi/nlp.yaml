@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Smart Article Analyzer
+  title: NLP Analyzer
   description: Text Analysis Application
   version: 0.1.0
 servers:
