@@ -1,0 +1,138 @@
+openapi: 3.0.3
+info:
+  title: News Feed Ingester
+  description: Text Extraction Application
+  version: 0.1.0
+servers:
+  - url: http://localhost:8001/
+paths:
+  /file/:
+    post:
+      summary: Request to parse file
+      operationId: file
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+              required:
+                - file
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ExtractResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /article:
+    get:
+      summary: Request to get article content
+      operationId: article
+      parameters:
+        - name: url
+          in: query
+          description: URL of the article
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExtractResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /search:
+    get:
+      summary: Request to search for articles
+      operationId: search
+      parameters:
+        - name: query
+          in: query
+          description: Search query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SearchResult"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Error message"
+      required:
+        - message
+    ExtractResponse:
+      type: object
+      properties:
+        content:
+          type: string
+          example: "Extracted content here"
+      required:
+        - content
+    SearchResult:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Article title"
+        url:
+          type: string
+          example: "https://example.com/article"
+        content:
+          type: string
+          example: "Article content here"
+      required:
+        - title
+        - url
+        - content
