@@ -1,7 +1,6 @@
 openapi: 3.0.3
 info:
-  title: News Feed Ingester
-  description: Text Extraction Application
+  title: Text Extraction Server
   version: 0.1.0
 servers:
   - url: http://localhost:8001/
@@ -70,38 +69,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  /search:
-    get:
-      summary: Request to search for articles
-      operationId: search
-      parameters:
-        - name: query
-          in: query
-          description: Search query
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/SearchResult"
-        "400":
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
 components:
   schemas:
     Error:
@@ -119,20 +86,4 @@ components:
           type: string
           example: "Extracted content here"
       required:
-        - content
-    SearchResult:
-      type: object
-      properties:
-        title:
-          type: string
-          example: "Article title"
-        url:
-          type: string
-          example: "https://example.com/article"
-        content:
-          type: string
-          example: "Article content here"
-      required:
-        - title
-        - url
         - content
