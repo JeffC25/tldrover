@@ -3,24 +3,26 @@ package config
 import (
 	"fmt"
 	"os"
-	"strconv"
+
+	"gopkg.in/yaml.v3"
 )
 
 type Config struct {
-	logLevel int
-	apiKey   string
+	LogLevel int    `yaml:"loglevel"`
+	ApiKey   string `yaml:"apikey"`
 }
 
-func NewConfig() (Config, error) {
-	c := Config{}
-	var err error
-
-	c.logLevel, err = strconv.Atoi(os.Getenv("LOG_LEVEL"))
+func GetConfig() (Config, error) {
+	f, err := os.ReadFile("../config/config.yaml")
 	if err != nil {
-		fmt.Println("LOG_LEVEL not set, defaulting to 0")
-		c.logLevel = 0
+		return Config{}, fmt.Errorf("unable to read config file: %v", err)
 	}
 
-	c.apiKey = os.Getenv("API_KEY")
+	c := Config{}
+	err = yaml.Unmarshal(f, &c)
+	if err != nil {
+		return Config{}, fmt.Errorf("unable to unmarshal config into struct: %v", err)
+	}
+
 	return c, nil
 }

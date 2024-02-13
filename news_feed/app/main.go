@@ -8,10 +8,18 @@ import (
 	"os/signal"
 	"time"
 
+	config "main/config"
+
 	"github.com/go-chi/chi/v5"
 )
 
 func main() {
+	config, err := config.GetConfig()
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Printf("Logging Level: %d\n", config.LogLevel)
+
 	r := chi.NewRouter()
 	r.Get("/search", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Search"))
