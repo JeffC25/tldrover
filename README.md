@@ -3,6 +3,8 @@
 
 Currently reimplementing https://github.com/JeffC25/smart-article-analyzer-old
 
+Track changes in the [dev branch](https://github.com/JeffC25/tldrover/tree/dev).
+
 ## Demo
 ![demo](https://github.com/JeffC25/tldrover/assets/34695547/de94b4f7-0fac-4dc5-acc5-baaa8367a933)
 

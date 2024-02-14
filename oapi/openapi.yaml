@@ -1,0 +1,237 @@
+openapi: 3.0.3
+info:
+  title: Smart Article Analyzer
+  description: Text Analysis Application
+  version: 0.1.0
+servers:
+  - url: http://localhost:8000/
+paths:
+  /file/:
+    post:
+      summary: Request to parse file
+      operationId: file
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+              required:
+                - file
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ExtractResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /article:
+    get:
+      summary: Request to get article content
+      operationId: article
+      parameters:
+        - name: url
+          in: query
+          description: URL of the article
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExtractResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /summary:
+    post:
+      summary: Request to summarize text
+      operationId: summary
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SummaryRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SummaryResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /keywords:
+    post:
+      summary: Request to get keywords
+      operationId: keywords
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KeywordsRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KeywordsResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /sentiment:
+    post:
+      summary: Request to get sentiment analysis
+      operationId: sentiment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SentimentRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SentimentResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Error message"
+      required:
+        - message
+    ExtractResponse:
+      type: object
+      properties:
+        content:
+          type: string
+          example: "Extracted content here"
+      required:
+        - content
+    SummaryRequest:
+      type: object
+      properties:
+        text:
+          type: string
+          example: "Text here"
+      required:
+        - text
+    SummaryResponse:
+      type: object
+      properties:
+        text:
+          type: string
+          example: "Summary here"
+      required:
+        - text
+    KeywordsRequest:
+      type: object
+      properties:
+        text:
+          type: string
+          example: "Text here"
+        minScore:
+          type: number
+          format: float
+          example: 0.9
+      required:
+        - text
+    KeywordsResponse:
+      type: object
+      properties:
+        keywords:
+          type: array
+          items:
+            type: string
+          example: ["keyword1", "keyword2"]
+      required:
+        - keywords
+        - minScore
+    SentimentRequest:
+      type: object
+      properties:
+        text:
+          type: string
+          example: "Text here"
+      required:
+        - text
+    SentimentResponse:
+      type: object
+      properties:
+        label:
+          type: string
+          example: "positive"
+        score:
+          type: number
+          format: float
+          example: 0.9
+      required:
+        - label
+        - score
