@@ -28,7 +28,7 @@ To run and develop this project locally, clone the repository and ensure that No
 5. To deactivate the virtual enviornment the virtual enviornment, run `deactivate`.
 
 #### To run the newsfeed server:
-1. ---
+1. --
 
 ## API
 
