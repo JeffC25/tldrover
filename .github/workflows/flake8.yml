@@ -4,11 +4,11 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'server/app/**'
+      - 'text_analyzer/app/**'
   pull_request:
     branches: [ main ]
     paths:
-      - 'server/app/**'
+      - 'text_analyzer/app/**'
 
 jobs:
   flake8:
@@ -28,4 +28,4 @@ jobs:
 
     - name: Run Flake8
       run: |
-        flake8 server/app --config server/.flake8
+        flake8 text_analyzer/app --config text_analyzer/.flake8
