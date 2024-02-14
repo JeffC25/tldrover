@@ -30,10 +30,10 @@ To run and develop this project locally, clone the repository and ensure that No
 ## API
 
 ### Text Analyzer
-The OpenAPI document for the text analysis server is available [here](https://github.com/JeffC25/tldrover/blob/main/oapi/analyzer.yaml).
+The OpenAPI document for the text analysis service is available [here](https://github.com/JeffC25/tldrover/blob/main/oapi/analyzer.yaml).
 
 ### Text Extractor
-The OpenAPI document for the text extraction server is available [here](https://github.com/JeffC25/tldrover/blob/main/oapi/extractor.yaml).
+The OpenAPI document for the text extraction service is available [here](https://github.com/JeffC25/tldrover/blob/main/oapi/extractor.yaml).
 
 ### Newsfeed Ingester
-The OpenAPI document for the newsfeed server is available [here](https://github.com/JeffC25/tldrover/blob/main/oapi/news.yaml).
+The OpenAPI document for the newsfeed service is available [here](https://github.com/JeffC25/tldrover/blob/main/oapi/news.yaml).
