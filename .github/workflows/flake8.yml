@@ -8,7 +8,7 @@ on:
   pull_request:
     branches: [ main ]
     paths:
-      - 'text_analyzer/app/**'
+      - 'analyzer_extractor/app/**'
 
 jobs:
   flake8:
@@ -28,4 +28,4 @@ jobs:
 
     - name: Run Flake8
       run: |
-        flake8 text_analyzer/app --config text_analyzer/.flake8
+        flake8 analyzer_extractor/app --config analyzer_extractor/.flake8
