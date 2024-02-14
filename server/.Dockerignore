@@ -1,5 +1,0 @@
-/app/storage/
-/app/pycache/
-.venv/
-*.md
-*.pyc
