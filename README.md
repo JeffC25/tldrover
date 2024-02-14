@@ -7,7 +7,7 @@ This project is a rewrite of https://github.com/JeffC25/smart-article-analyzer-o
 ![demo](https://github.com/JeffC25/tldrover/assets/34695547/de94b4f7-0fac-4dc5-acc5-baaa8367a933)
 
 ## Local Deveopment
-To run and develop this project locally, clone the repository and ensure that Node.js and Python are installed.
+To run and develop this project locally, clone the repository and ensure that Node.js, Python, and Go are installed.
 
 #### To run the frontend: 
 1. Navigate to `frontend/`.
