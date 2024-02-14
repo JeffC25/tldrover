@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Text Analysis Server
+  title: Text Extraction and Analysis Server
   version: 0.1.0
 servers:
   - url: http://localhost:8000/
