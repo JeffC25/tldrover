@@ -10,7 +10,7 @@ This project is a rewrite of https://github.com/JeffC25/smart-article-analyzer-o
 To run and develop this project locally, clone the repository and ensure that Node.js and Python are installed.
 
 #### To run the frontend: 
-1. Navigate to `ui/`.
+1. Navigate to `frontend/`.
 2. Run `npm install` to install dependencies.
 3. Run `npm run dev` to start the development server.
 
