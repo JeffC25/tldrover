@@ -1,9 +1,7 @@
-# TLDRover
-🚧 Under Construction 🚧
+# 🚧 Under Construction 🚧 #
+# TLDRover #
 
-Currently reimplementing https://github.com/JeffC25/smart-article-analyzer-old
-
-Track changes in the [dev branch](https://github.com/JeffC25/tldrover/tree/dev).
+This project is a rewrite of https://github.com/JeffC25/smart-article-analyzer-old.
 
 ## Demo
 ![demo](https://github.com/JeffC25/tldrover/assets/34695547/de94b4f7-0fac-4dc5-acc5-baaa8367a933)
@@ -30,11 +28,12 @@ To run and develop this project locally, clone the repository and ensure that No
 ~~5. To deactivate the virtual enviornment the virtual enviornment, run `deactivate`.~~
 
 ## API
-~~The OpenAPI document for the server is available [here](https://github.com/JeffC25/tldrover/blob/main/oapi/openapi.yaml).~~
 
-The API currently supports the following endpoints:
-- `/summary/` to generate summary from a text
-- `/keywords/` to extract keywords from a text
-- `/sentiment/` to analyze sentiment from a text
-- `/article/` to extract text from an article
-- `/file/` to extract text from a PDF file
+### Text Analyzer
+The OpenAPI document for the text analysis server is available [here](https://github.com/JeffC25/tldrover/blob/main/oapi/analyzer.yaml).
+
+### Text Extractor
+The OpenAPI document for the text extraction server is available [here](https://github.com/JeffC25/tldrover/blob/main/oapi/extractor.yaml).
+
+### Newsfeed Ingester
+The OpenAPI document for the newsfeed server is available [here](https://github.com/JeffC25/tldrover/blob/main/oapi/news.yaml).
