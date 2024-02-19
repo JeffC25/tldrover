@@ -14,6 +14,9 @@ To run and develop this project locally, clone the repository and ensure that No
 2. Run `npm install` to install dependencies.
 3. Run `npm run dev` to start the development server.
 
+#### To run the API gateway:
+1. --
+
 #### To run the text extraction/analysis server:
 1. Navigate to `analyzer_extractor/`.
 2. Run `bash install.sh` or `./install.sh` to set up a Python virtual enviornment and install dependencies.
@@ -31,20 +34,16 @@ To run and develop this project locally, clone the repository and ensure that No
 1. --
 
 ## API
+The OpenAPI document for the API gateway is available [here](https://github.com/JeffC25/tldrover/blob/main/oapi/analyzer_extractor.yaml).
 
-### Text Extractor and Analyzer Service
-The OpenAPI document for the text extraction and analyzer service is available [here](https://github.com/JeffC25/tldrover/blob/main/oapi/analyzer_extractor.yaml).
+#### Endpoints:
+Newsfeed Service (OpenAPI document available [here](https://github.com/JeffC25/tldrover/blob/main/oapi/newsfeed.yaml).)
+- `/search/` to query for articles with keywords
+- `/topic/` to fetch articles categorized my topic
 
-Endpoints:
+Text Extractor/Analyzer Service (OpenAPI document available [here](https://github.com/JeffC25/tldrover/blob/main/oapi/analyzer_extractor.yaml).)
 - `/summary/` to generate summary from a text
 - `/keywords/` to extract keywords from a text
 - `/sentiment/` to analyze sentiment from a text
 - `/article/` to extract text from an article
 - `/file/` to extract text from a PDF file
-
-### Newsfeed Service
-The OpenAPI document for the text extraction and analyzer service is available [here](https://github.com/JeffC25/tldrover/blob/main/oapi/newsfeed.yaml).
-
-Endpoints:
-- `/search/` to query for articles with keywords
-- `/topic/` to fetch articles categorized my topic
