@@ -1,3 +1,4 @@
 logLevel: 1
 analyzerextractor: http://localhost:8000/
 newsfeedapi: http://localhost:8001/
+apicache: http://localhost:6379/
