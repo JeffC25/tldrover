@@ -1,4 +1,3 @@
-# 🚧 Under Construction 🚧 #
 # TLDRover #
 
 This project is a rewrite of https://github.com/JeffC25/smart-article-analyzer-old.
