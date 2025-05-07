@@ -1,4 +1,4 @@
-interface CheckboxItem {
+export interface CheckboxItem {
     id: number;
     value: string;
     isChecked: boolean;
@@ -10,7 +10,6 @@ interface Props {
 }
 
 const CheckboxList = ({ items, setItems }: Props) => {
-
     const handleCheck = (id: number) => {
         const updatedItems = items.map(item => {
             if (item.id === id)
@@ -19,7 +18,6 @@ const CheckboxList = ({ items, setItems }: Props) => {
         });
         setItems(updatedItems);
     };
-
     return (
         <div className="flex flex-col space-y-2 w-min">
             {items.map(item => (
@@ -36,7 +34,6 @@ const CheckboxList = ({ items, setItems }: Props) => {
             ))}
         </div>
     );
-
 };
 
 export default CheckboxList;

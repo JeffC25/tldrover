@@ -13,12 +13,10 @@ const SearchNewsWidget = ({setOpen} : Props) => {
                 setOpen(false);
             }
         };
-    
+
         window.addEventListener('keydown', handleKeyPress);
-        return () => {
-          window.removeEventListener('keydown', handleKeyPress);
-        };
-      }, []);
+        return () => { window.removeEventListener('keydown', handleKeyPress); };
+    }, []);
 
     return (
         <div className="top-0 left-0 fixed z-50 w-screen h-screen backdrop- bg-neutral-900/20 flex justify-center items-center">

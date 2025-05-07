@@ -1,14 +1,9 @@
 import { useState } from "react";
+import { CheckboxItem } from "./components/CheckboxList";
 import CheckboxList from "./components/CheckboxList";
 import ExitArrowIcon from "./assets/exitarrow.svg"
 import SpinnerIcon from "./assets/spinner.svg"
 import SearchNewsWidget from "./components/SearchNewsWidget";
-
-interface CheckboxItem {
-  id: number;
-  value: string;
-  isChecked: boolean;
-}
 
 interface Sentiment {
   label: string;
@@ -75,34 +70,31 @@ function App() {
 
     // Create a FormData object and append the file
     const formData = new FormData();
-    if (file) {
-        formData.append('file', file);
-    }
+    if (file) formData.append('file', file)
 
     try {
-        setLoadingInputStatus("Extracting file...");
-        const response = await fetch(`http://localhost:8000/file/`, {
-            method: 'POST',
-            body: formData
-        });
+      setLoadingInputStatus("Extracting file...");
+      const response = await fetch(`http://localhost:8000/file/`, {
+        method: "POST",
+        body: formData,
+      });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-        const data = await response.json();
+      const data = await response.json();
 
-        setContent(data.content);
-
-        setPlaceholder('Enter text...');
+      setContent(data.content);
+      setPlaceholder("Enter text...");
     } catch (error) {
-        console.error('Error uploading file:', error);
-        setPlaceholder('There was an error extracting the text.');
-        setContent('');
+      console.error('Error uploading file:', error);
+      setPlaceholder('There was an error extracting the text.');
+      setContent('');
     }
 
     setLoadingInput(false);
-}
+  }
 
   const fetchAnalysis = async () => {
     setSummary('');
@@ -118,15 +110,10 @@ function App() {
     if (items[2].isChecked) {
       try {
         setLoadingOutputStatus("Extracting keywords...");
-        const response = await fetch('http://localhost:8000/keywords', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              text: content,
-              minScore: 0.9
-            })
+        const response = await fetch("http://localhost:8000/keywords", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: content, minScore: 0.9 }),
         });
         const data = await response.json();
         if (!response.ok) {
@@ -142,14 +129,10 @@ function App() {
     if (items[1].isChecked) {
       try {
         setLoadingOutputStatus("Analyzing sentiment...");
-        const response = await fetch('http://localhost:8000/sentiment', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              text: content
-            })
+        const response = await fetch("http://localhost:8000/sentiment", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: content, }),
         });
         const data = await response.json();
         if (!response.ok) {
@@ -165,14 +148,10 @@ function App() {
     if (items[0].isChecked) {
       try {
         setLoadingOutputStatus("Generating summary...");
-        const response = await fetch('http://localhost:8000/summary', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              text: content
-            })
+        const response = await fetch("http://localhost:8000/summary", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: content, }),
         });
         const data = await response.json();
         if (!response.ok) {
@@ -207,8 +186,6 @@ function App() {
           
         </div>
 
-        {/* <div className="bg-neutral-300 w-full h-px mt-1 mb"></div> */}
-
         {/* PDF and URL Input */}
         <div className="w-full flex flex-col space-y-2">
           <form className="w-full border rounded-md border-lime-500 hover:bg-lime-500 hover:text-white duration-300 flex">
@@ -221,14 +198,10 @@ function App() {
           </button>    
         </div>
 
-        {/* <div className="bg-neutral-300 w-full h-px mt-1 mb"></div> */}
-
         <form onSubmit={(e) => {e.preventDefault(); fetchArticle(); (e.target as HTMLFormElement).reset()}} className="w-full rounded-md flex-shrink-0 flex flex-col space-y-2">
             <input type="url" id="url" onChange={(e) => setUrl(e.target.value)} placeholder="Enter article URL..." autoComplete="off" className=" p-1 rounded-md focus:outline-none border border-lime-500 "/>
             <button type="submit" className={`${url.trimStart() != '' ? 'bg-lime-500 hover:animate-pulse' : 'disabled bg-neutral-200'} text-white rounded-md p-1 transition duration-300`}>Extract Text</button>
         </form> 
-
-        {/* <div className="bg-neutral-300 w-full h-px mt-1 mb"></div> */}
 
         <div className="w-full flex flex-col space-y-2">
         {/* Checkbox List */}
