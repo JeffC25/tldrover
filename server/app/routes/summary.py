@@ -1,5 +1,6 @@
-from fastapi import APIRouter, HTTPException, Depends
 from app.api.schemas import SummaryRequest, SummaryResponse
+from fastapi import APIRouter, Depends, HTTPException
+
 from ..utils.model_loader import get_summarizer, get_summary_tokenizer
 
 router = APIRouter()
@@ -33,3 +34,4 @@ async def summarize_route(request: SummaryRequest, summarizer=Depends(get_summar
         return SummaryResponse(summary=summary)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+

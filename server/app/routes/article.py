@@ -1,8 +1,10 @@
-from fastapi import APIRouter, HTTPException, Query
-from app.api.schemas import ExtractResponse
-from urllib.parse import urlparse
-from newspaper import Article
 import os
+from urllib.parse import urlparse
+
+from app.api.schemas import ExtractResponse
+from fastapi import APIRouter, HTTPException, Query
+from newspaper import Article
+
 # from app.main import config
 
 router = APIRouter()
@@ -42,3 +44,4 @@ async def article(url: str = Query(..., description="URL of the article")):
         return ExtractResponse(content=content)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+

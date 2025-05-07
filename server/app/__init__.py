@@ -1,9 +1,10 @@
 # Resolve paths relative to the script file
-from app.config import config
-from pathlib import Path
-import nltk
-import os
 import logging
+import os
+from pathlib import Path
+
+import nltk
+from app.config import config
 
 logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s', level=logging.INFO)
 
@@ -25,3 +26,4 @@ try:
     _ = nltk.data.find('tokenizers/punkt')
 except LookupError:
     nltk.download('punkt', download_dir=os.environ["NLTK_DATA"])
+

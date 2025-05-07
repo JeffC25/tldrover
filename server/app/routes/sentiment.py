@@ -1,6 +1,8 @@
-from fastapi import APIRouter, HTTPException, Depends
-from app.api.schemas import SentimentResponse, SentimentRequest
-from ..utils.model_loader import get_sentiment_analyzer  # Adjust import path as necessary
+from app.api.schemas import SentimentRequest, SentimentResponse
+from fastapi import APIRouter, Depends, HTTPException
+
+from ..utils.model_loader import \
+    get_sentiment_analyzer  # Adjust import path as necessary
 
 router = APIRouter()
 
@@ -17,3 +19,4 @@ async def analyze_sentiment_route(request: SentimentRequest, sentiment_analyzer=
         return SentimentResponse(label=label, score=score)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+

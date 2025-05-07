@@ -1,5 +1,6 @@
-import yaml
 from pathlib import Path
+
+import yaml
 
 
 # Function to load configurations
@@ -11,3 +12,4 @@ def load_config(config_path='config.yaml'):
 
 # Load configurations
 config = load_config()
+

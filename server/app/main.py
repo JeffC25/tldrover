@@ -1,10 +1,11 @@
-import os
 import logging
+import os
 from contextlib import asynccontextmanager
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi import FastAPI
-from app.routes import article, file, summary, keywords, sentiment
+
+from app.routes import article, file, keywords, sentiment, summary
 from app.utils.model_loader import load_models_and_tokenizers
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 
 @asynccontextmanager
@@ -39,3 +40,4 @@ app.include_router(sentiment.router)
 # For debugging: Print the cache directories
 logging.info("Transformers cache directory: " + os.environ["HF_HOME"])
 logging.info("NLTK data directory: " + os.environ["NLTK_DATA"])
+

@@ -1,7 +1,8 @@
-from fastapi import APIRouter, HTTPException, UploadFile, File
-from app.api.schemas import ExtractResponse
-import pypdf
 import io
+
+import pypdf
+from app.api.schemas import ExtractResponse
+from fastapi import APIRouter, File, HTTPException, UploadFile
 
 router = APIRouter()
 
@@ -33,3 +34,4 @@ async def fild(file: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=str(e))
 
     return ExtractResponse(content=content)
+

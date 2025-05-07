@@ -1,5 +1,6 @@
-from transformers import pipeline, AutoTokenizer, AutoModelForTokenClassification
 from app.config import config
+from transformers import (AutoModelForTokenClassification, AutoTokenizer,
+                          pipeline)
 
 # Initialize placeholders for models and tokenizers
 keyword_extractor_pipeline = None
@@ -50,3 +51,4 @@ def get_summary_tokenizer():
     if not summary_tokenizer:
         load_models_and_tokenizers()
     return summary_tokenizer
+
