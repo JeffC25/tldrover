@@ -1,5 +1,7 @@
 # TLDRover #
 
+Web app for extracting summaries, keywords, and sentiment from text.
+
 ![demo](https://github.com/JeffC25/tldrover/assets/34695547/de94b4f7-0fac-4dc5-acc5-baaa8367a933)
 
 ## Local Deveopment
